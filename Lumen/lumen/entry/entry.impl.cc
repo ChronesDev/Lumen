@@ -32,7 +32,8 @@ namespace Lumen
 		//| By CXCubeHD                   v0.1 |
 		Debug.WriteLine(fg::cyan, " By CXCubeHD                   v0.1 ", fg::reset);
 
-		Log("Hello");
+		Debug.WriteLine();
+		Log(fgB::gray, "Initializing...");
 	}
 }
 
