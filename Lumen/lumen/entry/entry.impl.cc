@@ -11,8 +11,6 @@ namespace Lumen
 		Helper::TryMakeConsole();
 		SetConsoleTitle("Lumen Client");
 
-		Debug.Log("Welcome to Lumen Client");
-
 		Debug.WriteLine(R"!(  _                                 )!");
 		Debug.WriteLine(R"!( | |                                )!");
 		Debug.WriteLine(R"!( | |    _   _ _ __ ___   ___ _ __   )!");
