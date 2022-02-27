@@ -13,8 +13,9 @@ namespace Lumen
 
 		Helper::TryMakeConsole();
 		Helper::EnableConsoleAnsiCodes();
-
+		Helper::ConfigureConsoleStyle();
 		SetConsoleTitle("Lumen Client");
+
 		rang::setWinTermMode(rang::winTerm::Ansi);
 
 		Debug.Write(style::bold);
