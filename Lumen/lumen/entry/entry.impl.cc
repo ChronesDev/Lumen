@@ -1,6 +1,7 @@
 #include "entry.cc"
 
 #include <lumen/helper/helper.cc>
+#include <lumen/log/log.cc>
 
 #include <indxs>
 
@@ -8,9 +9,15 @@ namespace Lumen
 {
 	fun Entry() -> void
 	{
-		Helper::TryMakeConsole();
-		SetConsoleTitle("Lumen Client");
+		using namespace rang;
 
+		Helper::TryMakeConsole();
+		Helper::EnableConsoleAnsiCodes();
+
+		SetConsoleTitle("Lumen Client");
+		rang::setWinTermMode(rang::winTerm::Ansi);
+
+		Debug.Write(style::bold);
 		Debug.WriteLine(R"!(  _                                 )!");
 		Debug.WriteLine(R"!( | |                                )!");
 		Debug.WriteLine(R"!( | |    _   _ _ __ ___   ___ _ __   )!");
@@ -18,6 +25,13 @@ namespace Lumen
 		Debug.WriteLine(R"!( | |___| |_| | | | | | |  __/ | | | )!");
 		Debug.WriteLine(R"!( |______\__,_|_| |_| |_|\___|_| |_| )!");
 		Debug.WriteLine(R"!(                                    )!");
+		Debug.Write(style::reset);
+
+		//|                                    |
+		//| By CXCubeHD                   v0.1 |
+		Debug.WriteLine(fg::cyan, " By CXCubeHD                   v0.1 ", fg::reset);
+
+		Log("Hello");
 	}
 }
 
