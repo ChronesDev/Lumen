@@ -61,6 +61,53 @@ namespace Lumen::Helper
 		std::wcscpy(cfi.FaceName, L"Consolas"); // Choose your font
 		SetCurrentConsoleFontEx(hOut, FALSE, &cfi);
 	}
+
+	fun WaitUntilGameIsLoaded()->void
+	{
+		List<string> loadedModules;
+
+		while (true)
+		{
+			HMODULE hMods[1024];
+			HANDLE hProcess;
+			DWORD cbNeeded;
+
+			var hProc = GetCurrentProcess();
+			if (hProc == nullptr) throw std::exception("hProc was 0.");
+
+			if (K32EnumProcessModules(hProc, hMods, sizeof(hMods), &cbNeeded))
+			{
+				for (int i = 0; i < (cbNeeded / sizeof(HMODULE)); i++)
+				{
+					TCHAR szModName[MAX_PATH];
+
+					// Get the full path to the module's file.
+
+					if (GetModuleFileNameExA(hProc, hMods[i], szModName, sizeof(szModName) / sizeof(TCHAR)))
+					{
+						// Print the module name and handle value.
+
+						string name = szModName;
+						string fileName = name.Split("\\").back();
+						if (!loadedModules.Contains(fileName))
+						{
+							loadedModules.Add(fileName);
+						}
+						if (fileName == "mlang.dll" || fileName == "CoreShellAPI.dll" || fileName == "ncryptsslp.dll")
+						{
+							goto exit;
+						}
+					}
+				}
+			}
+
+			Sleep(300);
+			continue;
+
+			exit:
+			break;
+		}
+	}
 }
 
 #include <indxe>

@@ -10,6 +10,8 @@ namespace Lumen::Helper
 	fun MakeConsole()->void;
 	fun EnableConsoleAnsiCodes()->void;
 	fun ConfigureConsoleStyle()->void;
+
+	fun WaitUntilGameIsLoaded()->void;
 }
 
 #include <indxe>
