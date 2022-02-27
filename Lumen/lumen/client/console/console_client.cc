@@ -4,6 +4,8 @@
 
 namespace Lumen::Terminal
 {
+	global bool ShouldEject = false;
+
 	fun ConsoleEntry()->void;
 	fun PrintTitle()->void;
 }

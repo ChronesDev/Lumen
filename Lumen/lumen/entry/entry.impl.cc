@@ -18,6 +18,8 @@ namespace Lumen
 		rang::setWinTermMode(rang::winTerm::Ansi);
 
 		Terminal::ConsoleEntry();
+
+		Helper::DestroyConsole();
 	}
 }
 

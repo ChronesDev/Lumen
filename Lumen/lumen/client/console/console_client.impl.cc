@@ -1,11 +1,20 @@
 #include "console_client.cc"
 
+#include <lumen/entry/entry.cc>
 #include <lumen/helper/helper.cc>
 #include <lumen/log/log.cc>
 
 #include "terminal/terminal_parser.cc"
 
 #include <indxs>
+
+HMODULE GetCurrentModule_()
+{
+	DWORD flags = GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS;
+	HMODULE hm = 0;
+	::GetModuleHandleEx( flags, reinterpret_cast<LPCTSTR>( GetCurrentModule_ ), &hm );
+	return hm;
+}
 
 namespace Lumen::Terminal
 {
@@ -21,13 +30,14 @@ namespace Lumen::Terminal
 
 		Log.DelLine();
 		Log.Success("Done!");
-		Debug.WriteLine();
+		Log.NewLine();
 
 		Log.Custom("Use help to display all commands.");
 
 		while (true)
 		{
 			ProcessCommand(Log.TerminalInput());
+			if (ShouldEject) break;
 		}
 	}
 
@@ -49,7 +59,7 @@ namespace Lumen::Terminal
 		//| By CXCubeHD                   v0.1 |
 		Debug.WriteLine(fg::cyan, " By CXCubeHD                   v0.1 ", fg::reset);
 
-		Debug.WriteLine();
+		Log.NewLine();
 	}
 }
 

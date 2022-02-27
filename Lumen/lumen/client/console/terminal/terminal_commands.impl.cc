@@ -1,6 +1,7 @@
 #include "terminal_commands.cc"
 
 #include "commands/command_clear.cc"
+#include "commands/command_eject.cc"
 #include "commands/command_help.cc"
 
 #include <indxs>
@@ -14,6 +15,12 @@ namespace Lumen::Terminal
 		elif (command == "clear")
 		{
 			Commands::ExecuteClear(command, args);
+			return true;
+		}
+
+		elif (command == "eject")
+		{
+			Commands::ExecuteEject(command, args);
 			return true;
 		}
 

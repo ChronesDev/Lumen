@@ -5,10 +5,10 @@
 
 #include <indxs>
 
-static fun WINAPI Entry(HINSTANCE hInstance)->int
+static fun WINAPI Entry(HMODULE hModule)->int
 {
 	Lumen::Entry();
-	FreeLibraryAndExitThread(hInstance, 0);
+	FreeLibraryAndExitThread(hModule, 0);
 	return 0;
 }
 
@@ -21,12 +21,12 @@ __attribute__((constructor)) global fun LibraryMain()->void
 #endif
 
 #ifdef INDEX_MSVC
-global fun WINAPI DllMain(HINSTANCE hInstance, int reason, void* reserved)->bool
+global fun WINAPI DllMain(HMODULE hModule, int reason, void* reserved)->bool
 {
     switch (reason)
     {
     case DLL_PROCESS_ATTACH:
-        CreateThread(nullptr, 0, (LPTHREAD_START_ROUTINE)Entry, hInstance, 0, nullptr);
+	    CloseHandle(CreateThread(nullptr, 0, (LPTHREAD_START_ROUTINE)Entry, hModule, 0, nullptr));
         break;
     case DLL_PROCESS_DETACH:
         break;

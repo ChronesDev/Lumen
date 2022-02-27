@@ -4,6 +4,10 @@
 
 #include <indxs>
 
+static FILE* StdIn_ = { };
+static FILE* StdOut_ = { };
+static FILE* StdErr_ = { };
+
 namespace Lumen::Helper
 {
 	fun TryMakeConsole() -> void
@@ -17,10 +21,26 @@ namespace Lumen::Helper
 	{
 		if (!::AllocConsole()) INDEX_THROW("AllocConsole returned false.");
 
-		FILE *dummy;
-		freopen_s(&dummy, "CONIN$", "r", stdin);
-		freopen_s(&dummy, "CONOUT$", "w", stderr);
-		freopen_s(&dummy, "CONOUT$", "w", stdout);
+		StdCoutConsoleInit();
+	}
+	fun DestroyConsole()->void
+	{
+		StdCoutConsoleDeinit();
+
+		::FreeConsole();
+	}
+
+	fun StdCoutConsoleInit()->void
+	{
+		freopen_s(&StdIn_, "CONIN$", "r", stdin);
+		freopen_s(&StdOut_, "CONOUT$", "w", stderr);
+		freopen_s(&StdErr_, "CONOUT$", "w", stdout);
+	}
+	fun StdCoutConsoleDeinit()->void
+	{
+		fclose(StdIn_);
+		fclose(StdOut_);
+		fclose(StdErr_);
 	}
 
 	fun EnableConsoleAnsiCodes() -> void
