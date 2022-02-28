@@ -7,4 +7,4 @@
 **Lumen**, a Minecraft BE legit client.
 
 > :information_source: You are currently in the main branch. 
-> Switch to the active [dev/fast-deliver](/tree/dev/fast-deliver) branch.
+> Switch to the active [dev/fast-deliver](https://github.com/ChronesDev/Lumen/tree/dev/fast-deliver) branch.
