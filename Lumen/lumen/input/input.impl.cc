@@ -130,8 +130,8 @@ static fun OnMouseEvent_(UInt64 arg1, UInt64 arg2, UInt64 arg3, UInt64 arg4, UIn
         : mouseButton == 2          ? Lumen::Key::RightButton
                                     : Lumen::Key::Null;
 
-    bool handled;
-    bool cancel;
+    bool handled = false;
+    bool cancel = false;
 
     for (var& v : Lumen::Input::MouseEvent)
     {
