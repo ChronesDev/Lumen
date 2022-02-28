@@ -40,7 +40,13 @@ namespace Lumen::Modules
         bool IsZoomKeyPressed = false;
 
         float ZoomProgress = 0;
-        TimePoint ZoomKeyPoint = Time.Now;
+        TimePoint ZoomProcessPoint = Time.Now;
+
+        IPtr<IEasing> Easing = INew<QuartOutEasing>();
+        string EasingName = "QuartOut";
+
+        float InFactor = 1;
+        float OutFactor = 1;
     };
 
     global IPtr<Zoom> ZoomModule;

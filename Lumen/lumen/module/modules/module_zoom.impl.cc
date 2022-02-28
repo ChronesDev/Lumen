@@ -10,6 +10,12 @@
 fun OnGetFov_(void* that, float f, bool b)->float;
 fun OnKeyEvent_(Lumen::Key key, Lumen::KeyState state, bool& handled, bool& cancel)->void;
 
+static List<std::pair<string, IPtr<IEasing>>> Easings_ = {
+    { "Linear", INew<LinearEasing>() },
+    { "QuartOut", INew<QuartOutEasing>() },
+    { "QuartInOut", INew<QuartInOutEasing>() },
+};
+
 namespace Lumen::Modules
 {
     fun Zoom::OnInit()->void
@@ -51,7 +57,7 @@ namespace Lumen::Modules
                 Log.Custom(fgB::blue, "-> ", To);
             }
 
-            elif (args[0] == "duration")
+            elif (args[0] == "duration" || args[0] == "dur")
             {
                 if (args.Length != 1)
                 {
@@ -60,6 +66,58 @@ namespace Lumen::Modules
                     return;
                 }
                 Log.Custom(fgB::blue, "-> ", Duration.Sec);
+            }
+
+            elif (args[0] == "easing" || args[0] == "ease")
+            {
+                if (args.Length != 1)
+                {
+                    Log.Fail("Wrong amount of arguments.");
+                    Log.Custom(fgB::green, "... easing", "\t\t", fg::blue, "");
+                    return;
+                }
+
+                Log.Custom(fgB::blue, "-> ", EasingName);
+            }
+
+            elif (args[0] == "infactor" || args[0] == "infac")
+            {
+                if (args.Length != 1)
+                {
+                    Log.Fail("Wrong amount of arguments.");
+                    Log.Custom(fgB::green, "... infactor", "\t\t", fg::blue, "");
+                    return;
+                }
+
+                try
+                {
+                    InFactor = (float)std::stod(args[1]);
+                }
+                catch (...)
+                {
+                    Log.Fail("Wrong argument.");
+                }
+                Log.Custom(fgB::blue, "-> ", InFactor);
+            }
+
+            elif (args[0] == "outfactor" || args[0] == "outfac")
+            {
+                if (args.Length != 1)
+                {
+                    Log.Fail("Wrong amount of arguments.");
+                    Log.Custom(fgB::green, "... outfactor", "\t\t", fg::blue, "");
+                    return;
+                }
+
+                try
+                {
+                    OutFactor = (float)std::stod(args[1]);
+                }
+                catch (...)
+                {
+                    Log.Fail("Wrong argument.");
+                }
+                Log.Custom(fgB::blue, "-> ", OutFactor);
             }
         }
     }
@@ -89,7 +147,7 @@ namespace Lumen::Modules
                 Log.Custom(fgB::blue, "-> ", To);
             }
 
-            elif (args[0] == "duration")
+            elif (args[0] == "duration" || args[0] == "dur")
             {
                 if (args.Length != 2)
                 {
@@ -106,6 +164,88 @@ namespace Lumen::Modules
                     Log.Fail("Wrong argument.");
                 }
                 Log.Custom(fgB::blue, "-> ", Duration.Sec);
+            }
+
+            elif (args[0] == "easing" || args[0] == "ease")
+            {
+                if (args.Length != 2)
+                {
+                    Log.Fail("Wrong amount of arguments.");
+                    Log.Custom(fgB::green, "... duration (value)", "\t\t", fg::blue, "");
+                    return;
+                }
+
+                if (args[1] == "list")
+                {
+                    string all = "";
+                    for (var& e : Easings_)
+                    {
+                        all += e.first + ", ";
+                    }
+                    Log.Custom(fg::blue, "All available easing functions: ", fgB::blue,
+                        all.SubString(0, Max<ulong>(all.Length - 2, 0)));
+                    return;
+                }
+
+                try
+                {
+                    for (var& e : Easings_)
+                    {
+                        if (e.first.ToLower() == args[1].ToLower())
+                        {
+                            Easing = e.second;
+                            EasingName = e.first;
+                            goto jmp_finish;
+                        }
+                    }
+                    Log.Fail(args[0], " does not exist. Use ", fg::yellow, "set zoom ease list", fgB::red,
+                        " to list them all.");
+                    return;
+                }
+                catch (...)
+                {
+                    Log.Fail("Wrong argument.");
+                }
+            jmp_finish:
+                Log.Custom(fgB::blue, "-> ", EasingName);
+            }
+
+            elif (args[0] == "infactor" || args[0] == "infac")
+            {
+                if (args.Length != 2)
+                {
+                    Log.Fail("Wrong amount of arguments.");
+                    Log.Custom(fgB::green, "... infactor (value)", "\t\t", fg::blue, "");
+                    return;
+                }
+                try
+                {
+                    InFactor = (float)std::stod(args[1]);
+                }
+                catch (...)
+                {
+                    Log.Fail("Wrong argument.");
+                }
+                Log.Custom(fgB::blue, "-> ", InFactor);
+            }
+
+            elif (args[0] == "outfactor" || args[0] == "outfac")
+            {
+                if (args.Length != 2)
+                {
+                    Log.Fail("Wrong amount of arguments.");
+                    Log.Custom(fgB::green, "... outfactor (value)", "\t\t", fg::blue, "");
+                    return;
+                }
+                try
+                {
+                    OutFactor = (float)std::stod(args[1]);
+                }
+                catch (...)
+                {
+                    Log.Fail("Wrong argument.");
+                }
+                Log.Custom(fgB::blue, "-> ", OutFactor);
             }
         }
     }
@@ -127,34 +267,31 @@ fun OnGetFov_(void* that, float f, bool b)->float
 
         if (ZoomModule->IsZooming)
         {
-            var keyHitPoint = ZoomModule->ZoomKeyPoint;
-            var duration = ZoomModule->Duration.Sec;
-            var to = ZoomModule->To;
+            var duration = (float)ZoomModule->Duration.Sec;
+            var& processPoint = ZoomModule->ZoomProcessPoint;
+            var& progress = ZoomModule->ZoomProgress;
+            var& to = ZoomModule->To;
 
             if (ZoomModule->IsZoomKeyPressed)
             {
-                var lasted = (now - keyHitPoint).Sec;
-
                 if (duration == 0) return to;
 
-                var frac = Clamp<float>((float)(lasted / duration), 0, 1);
-                //if (frac == 1) ZoomModule->IsZooming = false;
-
-                ZoomModule->ZoomProgress = frac;
-                return (to - fov) * frac + fov;
+                var lasted = (now - processPoint).Sec;
+                var frac = (float)(lasted / duration) * ZoomModule->InFactor;
+                progress = Clamp<float>(progress + frac, 0, 1);
             }
 
             else
             {
-                var lasted = (now - keyHitPoint).Sec;
+                if (duration == 0) return to;
 
-                if (duration == 0) return fov;
-
-                var frac = ZoomModule->ZoomProgress - Clamp<float>((float)(lasted / duration), 0, 1);
-                if (frac <= 0) ZoomModule->IsZooming = false;
-
-                return (to - fov) * frac + fov;
+                var lasted = (now - processPoint).Sec;
+                var frac = (float)(lasted / duration) * ZoomModule->OutFactor;
+                progress = Clamp<float>(progress - frac, 0, 1);
             }
+
+            processPoint = now;
+            return Lerp<float>(fov, to, (float)ZoomModule->Easing->operator()(progress));
         }
     }
 
@@ -169,21 +306,18 @@ fun OnKeyEvent_(Lumen::Key key, Lumen::KeyState state, bool& handled, bool& canc
     if (ZoomModule.IsNull) INDEX_THROW("ZoomModule was null.");
     if (ZoomModule->IsDisabled) return;
 
-    var now = Time.Now;
     if (key != Key::Null && key == ZoomModule->BindZoom)
     {
         if (state == KeyState::Pressed)
         {
             ZoomModule->IsZooming = true;
             ZoomModule->IsZoomKeyPressed = true;
-            ZoomModule->ZoomKeyPoint = now;
         }
 
         if (state == KeyState::Released)
         {
             ZoomModule->IsZooming = true;
             ZoomModule->IsZoomKeyPressed = false;
-            ZoomModule->ZoomKeyPoint = now;
         }
 
         handled = true;
