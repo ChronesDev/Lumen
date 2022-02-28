@@ -24,15 +24,34 @@ namespace Lumen
     fun Module::Enable()->void
     {
         if (IsEnabled) INDEX_THROW("Already enabled.");
+        Enabled_ = true;
 
-        OnEnable();
+        try
+        {
+            OnEnable();
+        }
+        catch (std::exception& ex)
+        {
+            Enabled_ = false;
+            throw ex;
+        }
     }
 
     fun Module::Disable()->void
     {
         if (IsDisabled) INDEX_THROW("Already disabled.");
-
+        Enabled_ = false;
         OnDisable();
+
+        try
+        {
+            OnDisable();
+        }
+        catch (std::exception& ex)
+        {
+            Enabled_ = true;
+            throw ex;
+        }
     }
 }
 

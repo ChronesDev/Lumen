@@ -37,7 +37,7 @@ namespace Lumen::Terminal::Commands
         else
         {
             var name = arg;
-            var result = Modules::TryFindModuleByName(name);
+            var result = Modules::TryFindModuleByNameAnyCase(name);
             if (result.HasValue) mod = result->Ptr;
             else
             {
@@ -46,11 +46,16 @@ namespace Lumen::Terminal::Commands
             }
         }
 
-        if (!mod->HasState) Log.Custom(mod->Name, " cannot be toggled.");
+        if (!mod->HasState)
+        {
+            Log.Custom(mod->Name, " cannot be toggled.");
+            return;
+        }
 
         if (mod->IsEnabled)
         {
             Log.Custom(mod->Name, " is already enabled.");
+            return;
         }
 
         try
@@ -61,6 +66,8 @@ namespace Lumen::Terminal::Commands
         {
             Log.Fail(mod->Name, " throwed an exception while trying to enable it.");
         }
+
+        Log.Success("Enabled ", mod->Name);
     }
 
     global fun ExecuteOff(string command, List<string> args)->void
@@ -93,7 +100,7 @@ namespace Lumen::Terminal::Commands
         else
         {
             var name = arg;
-            var result = Modules::TryFindModuleByName(name);
+            var result = Modules::TryFindModuleByNameAnyCase(name);
             if (result.HasValue) mod = result->Ptr;
             else
             {
@@ -102,11 +109,16 @@ namespace Lumen::Terminal::Commands
             }
         }
 
-        if (!mod->HasState) Log.Custom(mod->Name, " cannot be toggled.");
+        if (!mod->HasState)
+        {
+            Log.Custom(mod->Name, " cannot be toggled.");
+            return;
+        }
 
         if (mod->IsDisabled)
         {
             Log.Custom(mod->Name, " is already disabled.");
+            return;
         }
 
         try
@@ -117,6 +129,8 @@ namespace Lumen::Terminal::Commands
         {
             Log.Fail(mod->Name, " throwed an exception while trying to disable it.");
         }
+
+        Log.Success("Disabled ", mod->Name);
     }
 }
 
