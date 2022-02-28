@@ -12,6 +12,8 @@ namespace Lumen::Terminal::Commands
 
 		Log.NewLine();
 		Log.Custom(fg::cyan, "help \t", fg::gray," - Displays this output");
+                Log.Custom(fg::cyan, "clear \t", fg::gray," - Clears the console");
+                Log.Custom(fg::cyan, "eject \t", fg::gray," - Ejects the client");
 		Log.NewLine();
 	}
 }
