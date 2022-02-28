@@ -2,6 +2,7 @@
 
 #include "commands/command_clear.cc"
 #include "commands/command_eject.cc"
+#include "commands/command_get_set.cc"
 #include "commands/command_help.cc"
 #include "commands/command_info.cc"
 #include "commands/command_on_off.cc"
@@ -23,6 +24,18 @@ namespace Lumen::Terminal
         elif (command == "eject")
         {
             Commands::ExecuteEject(command, args);
+            return true;
+        }
+
+        elif (command == "get")
+        {
+            Commands::ExecuteGet(command, args);
+            return true;
+        }
+
+        elif (command == "set")
+        {
+            Commands::ExecuteSet(command, args);
             return true;
         }
 

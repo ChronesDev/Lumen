@@ -4,6 +4,8 @@
 
 #include <indxs>
 
+fun OnGetFov(void* that, float f, bool b)->float;
+
 namespace Lumen::Modules
 {
     struct Zoom;
@@ -18,6 +20,12 @@ namespace Lumen::Modules
 
         fun OnInit()->void override;
         fun OnDeinit()->void override;
+
+        fun ExecuteGet(List<string> args)->void override;
+        fun ExecuteSet(List<string> args)->void override;
+
+        float To = 30.0f;
+        TimeSpan Duration = TimeSpan::FromSec(0.3);
     };
 
     global IPtr<Zoom> ZoomModule;

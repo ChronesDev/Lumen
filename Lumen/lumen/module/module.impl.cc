@@ -1,5 +1,7 @@
 #include "module.cc"
 
+#include <lumen/log/log.cc>
+
 #include <indxs>
 
 namespace Lumen
@@ -51,6 +53,15 @@ namespace Lumen
             Enabled_ = true;
             throw ex;
         }
+    }
+
+    fun Module::ExecuteGet(List<string> args)->void
+    {
+        Log.Custom("This module doesn't have any gettable properties.");
+    }
+    fun Module::ExecuteSet(List<string> args)->void
+    {
+        Log.Custom("This module doesn't have any settable properties.");
     }
 }
 

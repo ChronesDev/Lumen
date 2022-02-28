@@ -22,8 +22,8 @@ namespace Lumen
         fun Deinit()->void;
 
     protected:
-        virtual fun OnInit()->void { };
-        virtual fun OnDeinit()->void { };
+        virtual fun OnInit()->void {};
+        virtual fun OnDeinit()->void {};
 
     public:
         [[nodiscard]] virtual fun GetName() const->string = 0;
@@ -53,8 +53,12 @@ namespace Lumen
         fun Disable()->void;
 
     protected:
-        virtual fun OnEnable()->void { };
-        virtual fun OnDisable()->void { };
+        virtual fun OnEnable()->void {};
+        virtual fun OnDisable()->void {};
+
+    public:
+        virtual fun ExecuteGet(List<string> args)->void;
+        virtual fun ExecuteSet(List<string> args)->void;
     };
 }
 
