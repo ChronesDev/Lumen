@@ -15,6 +15,7 @@ namespace Lumen::Modules
         var self = ISelf();
         ZoomModule = nullptr;
     }
+
 }
 
 #include <indxe>

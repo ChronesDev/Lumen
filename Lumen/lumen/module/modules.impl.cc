@@ -52,7 +52,7 @@ namespace Lumen::Modules
     {
         for (var& m : Modules_)
         {
-            if (m->Name == id) return m;
+            if (m->Id == id) return m;
         }
         return Null;
     }

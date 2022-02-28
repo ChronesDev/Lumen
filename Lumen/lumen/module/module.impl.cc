@@ -41,7 +41,6 @@ namespace Lumen
     {
         if (IsDisabled) INDEX_THROW("Already disabled.");
         Enabled_ = false;
-        OnDisable();
 
         try
         {

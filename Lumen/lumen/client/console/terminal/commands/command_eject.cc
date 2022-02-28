@@ -11,6 +11,12 @@ namespace Lumen::Terminal::Commands
     {
         using namespace rang;
 
+        if (args.Length == 1 && args[0] == "help")
+        {
+            Log.Custom(fgB::green, "eject", "\t\t", fg::blue, "");
+            return;
+        }
+
         ShouldEject = true;
 
         Log.NewLine();

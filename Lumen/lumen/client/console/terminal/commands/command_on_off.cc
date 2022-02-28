@@ -11,6 +11,13 @@ namespace Lumen::Terminal::Commands
     {
         using namespace rang;
 
+        if (args.Length == 1 && args[0] == "help")
+        {
+            Log.Custom(fgB::green, "on (module)", "\t\t", fg::blue, "Example: on zoom");
+            Log.Custom(fgB::green, "on (.id)", "\t\t", fg::blue, "Example: on .lumen_zoom");
+            return;
+        }
+
         if (args.Length != 1)
         {
             Log.Fail("Wrong amount of arguments.");
@@ -29,11 +36,10 @@ namespace Lumen::Terminal::Commands
             if (result.HasValue) mod = result->Ptr;
             else
             {
-                Log.Fail("A module with the id ", id, " wasn't found.");
+                Log.Fail("A module by the id ", id, " wasn't found.");
                 return;
             }
         }
-
         else
         {
             var name = arg;
@@ -60,11 +66,13 @@ namespace Lumen::Terminal::Commands
 
         try
         {
-            if (mod->IsDisabled) mod->Enable();
+            mod->Enable();
         }
         catch (std::exception ex)
         {
-            Log.Fail(mod->Name, " throwed an exception while trying to enable it.");
+            Log.Fail(fg::black, bgB::red, mod->Name, " throwed an exception while trying to enable it: ", fgB::red,
+                bg::reset, "\n\t", ex.what());
+            return;
         }
 
         Log.Success("Enabled ", mod->Name);
@@ -74,11 +82,18 @@ namespace Lumen::Terminal::Commands
     {
         using namespace rang;
 
+        if (args.Length == 1 && args[0] == "help")
+        {
+            Log.Custom(fgB::green, "off (module)", "\t\t", fg::blue, "Example: on zoom");
+            Log.Custom(fgB::green, "off (.id)", "\t\t", fg::blue, "Example: on .lumen_zoom");
+            return;
+        }
+
         if (args.Length != 1)
         {
             Log.Fail("Wrong amount of arguments.");
-            Log.Custom(fgB::green, "on (module)", "\t\t", fg::blue, "Example: on zoom");
-            Log.Custom(fgB::green, "on (.id)", "\t\t", fg::blue, "Example: on .lumen_zoom");
+            Log.Custom(fgB::green, "off (module)", "\t\t", fg::blue, "Example: on zoom");
+            Log.Custom(fgB::green, "off (.id)", "\t\t", fg::blue, "Example: on .lumen_zoom");
             return;
         }
 
@@ -92,11 +107,10 @@ namespace Lumen::Terminal::Commands
             if (result.HasValue) mod = result->Ptr;
             else
             {
-                Log.Fail("A module with the id ", id, " wasn't found.");
+                Log.Fail("A module by the id ", id, " wasn't found.");
                 return;
             }
         }
-
         else
         {
             var name = arg;
@@ -123,11 +137,13 @@ namespace Lumen::Terminal::Commands
 
         try
         {
-            if (mod->IsEnabled) mod->Disable();
+            mod->Disable();
         }
         catch (std::exception ex)
         {
-            Log.Fail(mod->Name, " throwed an exception while trying to disable it.");
+            Log.Fail(fg::black, bgB::red, mod->Name, " throwed an exception while trying to disable it: ", fgB::red,
+                bg::reset, "\n\t", ex.what());
+            return;
         }
 
         Log.Success("Disabled ", mod->Name);

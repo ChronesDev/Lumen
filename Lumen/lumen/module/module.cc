@@ -32,6 +32,9 @@ namespace Lumen
         [[nodiscard]] virtual fun GetId() const->string = 0;
         INDEX_Property(get = GetId) string Id;
 
+        [[nodiscard]] virtual fun GetDescription() const->string = 0;
+        INDEX_Property(get = GetDescription) string Description;
+
     public:
         [[nodiscard]] virtual fun GetHasState() const->bool { return false; }
         INDEX_Property(get = GetHasState) bool HasState;

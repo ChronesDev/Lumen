@@ -13,6 +13,7 @@ namespace Lumen::Modules
     {
         fun GetName() const->string override { return "Zoom"; }
         fun GetId() const->string override { return "lumen_zoom"; }
+        fun GetDescription() const->string override { return "Zooms when triggerred."; }
         fun GetHasState() const->bool override { return true; }
 
         fun OnInit()->void override;

@@ -3,6 +3,7 @@
 #include "commands/command_clear.cc"
 #include "commands/command_eject.cc"
 #include "commands/command_help.cc"
+#include "commands/command_info.cc"
 #include "commands/command_on_off.cc"
 
 #include <indxs>
@@ -28,6 +29,12 @@ namespace Lumen::Terminal
         elif (command == "help")
         {
             Commands::ExecuteHelp(command, args);
+            return true;
+        }
+
+        elif (command == "info")
+        {
+            Commands::ExecuteInfo(command, args);
             return true;
         }
 
