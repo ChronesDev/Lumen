@@ -20,28 +20,42 @@ namespace Lumen::Input
     fun Init()->void
     {
         if (Initialized_) return;
-        Initialized_ = true;
 
-        var result = Mem.FindSignature(Signature::KeyboardEvent);
-        Detour::KeyEventDetour.Hook(result, Detour::KeyEventOriginal, OnKeyEvent_);
-        Log("KeyboardEvent successfully hooked");
+        {
+            var result = Mem.FindSignaturePtr(Signature::KeyboardEvent);
+            Log("KeyboardEvent address: ", result);
+            Detour::KeyEventDetour.Hook(result, Detour::KeyEventOriginal, OnKeyEvent_);
+            Log("KeyboardEvent successfully hooked");
+        }
+
+        {
+            var result = Mem.FindSignaturePtr(Signature::MouseEvent);
+            Log("MouseEvent address: ", result);
+            Detour::MouseEventDetour.Hook(result, Detour::MouseEventOriginal, OnMouseEvent_);
+            Log("MouseEvent successfully hooked");
+        }
+
+        Initialized_ = true;
     }
 
     fun Deinit()->void
     {
         if (!Initialized_) return;
-        Initialized_ = false;
 
         Detour::KeyEventDetour.UnhookIfEnabled();
-
         Log("KeyboardEvent unhooked");
+
+        Detour::MouseEventDetour.UnhookIfEnabled();
+        Log("MouseEvent unhooked");
+
+        Initialized_ = false;
     }
 
     static std::array<KeyState, 0xFF> KeySet_ = {};
 
-    fun GetLMB()->KeyState { return KeySet_[(size_t)Lumen::Key::LeftButton]; }
-    fun GetRMB()->KeyState { return KeySet_[(size_t)Lumen::Key::RightButton]; }
-    fun GetMMB()->KeyState { return KeySet_[(size_t)Lumen::Key::MiddleButton]; }
+    fun LMB()->KeyState { return KeySet_[(size_t)Lumen::Key::LeftButton]; }
+    fun RMB()->KeyState { return KeySet_[(size_t)Lumen::Key::RightButton]; }
+    fun MMB()->KeyState { return KeySet_[(size_t)Lumen::Key::MiddleButton]; }
 
     fun Key(Lumen::Key key)->KeyState { return KeySet_[(size_t)key]; }
     fun KeyDown(Lumen::Key key)->bool { return Key(key) == KeyState::Pressed; }
@@ -60,11 +74,11 @@ namespace Lumen::Input
         LastMFP_ = MFP_;
         MFP_ = { (float)position.X, (float)position.Y };
     }
-    fun GetMousePosition()->Vec2I { return MousePosition_; }
+    fun MousePosition()->Vec2I { return MousePosition_; }
 
-    fun GetLastMousePosition()->Vec2I { return LastMousePosition_; }
+    fun LastMousePosition()->Vec2I { return LastMousePosition_; }
 
-    fun GetMFP()->Vec2F { return MFP_; }
+    fun MFP()->Vec2F { return MFP_; }
 
     fun IsMFPIn(const Rect& r)->bool { return r.IsPointInside(MFP_); }
 }

@@ -7,14 +7,14 @@
 
 namespace Lumen::Terminal::Commands
 {
-	global fun ExecuteClear(string command, List<string> args)->void
-	{
-		system("cls");
+    global fun ExecuteClear(string command, List<string> args)->void
+    {
+        Log.Clear();
 
-		PrintTitle();
-		Log.Success("Cleared!");
-		Debug.WriteLine();
-	}
+        PrintTitle();
+        Log.Success("Cleared!");
+        Debug.WriteLine();
+    }
 }
 
 #include <indxe>
