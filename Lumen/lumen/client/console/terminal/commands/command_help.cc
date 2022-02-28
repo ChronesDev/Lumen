@@ -11,12 +11,16 @@ namespace Lumen::Terminal::Commands
         using namespace rang;
 
         Log.NewLine();
-        Log.Custom(fg::cyan, "help \t", fg::gray, " - Displays this output");
-        Log.Custom(fg::cyan, "clear \t", fg::gray, " - Clears the console");
-        Log.Custom(fg::cyan, "eject \t", fg::gray, " - Ejects the client");
-        Log.Custom(fg::cyan, "on \t", fg::gray, " - Enables a module.");
-        Log.Custom(fg::cyan, "off \t", fg::gray, " - Disables a module.");
-        Log.Custom(fg::cyan, "info \t", fg::gray, " - Displays info about a module.");
+        Log.Custom(fg::cyan, "help         ", fg::gray, " - Displays this output");
+        Log.Custom(fg::cyan, "clear        ", fg::gray, " - Clears the console");
+        Log.Custom(fg::cyan, "eject        ", fg::gray, " - Ejects the client");
+        Log.Custom(fg::cyan, "on           ", fg::gray, " - Enables a module.");
+        Log.Custom(fg::cyan, "off          ", fg::gray, " - Disables a module.");
+        Log.Custom(fg::cyan, "info         ", fg::gray, " - Displays info about a module.");
+        Log.Custom(fg::cyan, "set          ", fg::gray, " - Sets a property from a module.");
+        Log.Custom(fg::cyan, "get          ", fg::gray, " - Gets a property from a module.");
+        Log.Custom(fg::cyan, "bind         ", fg::gray, " - Binds a key to a module.");
+        Log.Custom(fg::cyan, "unbind       ", fg::gray, " - Unbinds a module.");
         Log.NewLine();
     }
 }

@@ -33,8 +33,8 @@ namespace Lumen::Modules
 
         bool IsZooming = false;
 
-        float To = 30.0f;
-        TimeSpan Duration = TimeSpan::FromSec(0.3);
+        float To = 40.0f;
+        TimeSpan Duration = TimeSpan::FromSec(0.1);
 
         Key BindZoom = Key::Null;
         bool IsZoomKeyPressed = false;

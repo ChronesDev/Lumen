@@ -98,7 +98,7 @@ static fun OnKeyEvent_(ulong id, ulong value)->void
     for (var& v : Lumen::Input::KeyEvent)
     {
         v(key, keyState, handled, cancel);
-        if (handled) return;
+        if (handled) break;
     }
     if (cancel)
     {
@@ -141,7 +141,7 @@ static fun OnMouseEvent_(UInt64 arg1, UInt64 arg2, UInt64 arg3, UInt64 arg4, UIn
     if (cancel) return;
 
     OnMouseEvent_Other_(key, state, isMoving, { mouseX, mouseY }, handled, cancel);
-    if (handled) return;
+    //if (handled) return;
     if (cancel) return;
 
     Lumen::Detour::MouseEventOriginal(arg1, arg2, arg3, arg4, arg5, arg6, arg7);

@@ -187,7 +187,6 @@ fun OnKeyEvent_(Lumen::Key key, Lumen::KeyState state, bool& handled, bool& canc
         }
 
         handled = true;
-        cancel = true;
     }
 }
 

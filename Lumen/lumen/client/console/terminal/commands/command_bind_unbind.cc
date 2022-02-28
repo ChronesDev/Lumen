@@ -78,7 +78,7 @@ namespace Lumen::Terminal::Commands
             return;
         }
 
-        Log.Custom(fg::blue, mod->Name, " -> ", args[1]);
+        Log.Custom(fg::blue, mod->Name, " -> ", Input::KeyToKeyName(key));
     }
 
     global fun ExecuteUnbind(string command, List<string> args)->void
