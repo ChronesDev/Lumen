@@ -4,6 +4,11 @@
 
 namespace Lumen
 {
+    Module::~Module()
+    {
+        if (Initialized_) Deinit();
+    }
+
     fun Module::Init()->void
     {
         OnInit();

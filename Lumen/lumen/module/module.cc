@@ -6,14 +6,17 @@
 
 namespace Lumen
 {
-    class Module
+    class Module : public IObj<Module>
     {
+    public:
+        ~Module();
+
     protected:
         bool Initialized_ = false;
 
     public:
         [[nodiscard]] fun GetIsInitialized() const->bool { return Initialized_; }
-        INDEX_Property(get = GetIsInitialized) string IsInitialized;
+        INDEX_Property(get = GetIsInitialized) bool IsInitialized;
 
         fun Init()->void;
         fun Deinit()->void;
@@ -23,8 +26,11 @@ namespace Lumen
         virtual fun OnDeinit()->void { };
 
     public:
-        [[nodiscard]] virtual fun GetName() const->string { return ""; }
+        [[nodiscard]] virtual fun GetName() const->string = 0;
         INDEX_Property(get = GetName) string Name;
+
+        [[nodiscard]] virtual fun GetId() const->string = 0;
+        INDEX_Property(get = GetId) string Id;
 
     public:
         [[nodiscard]] virtual fun GetHasState() const->bool { return false; }
@@ -44,8 +50,8 @@ namespace Lumen
         fun Disable()->void;
 
     protected:
-        virtual fun OnEnable()->void = 0;
-        virtual fun OnDisable()->void = 0;
+        virtual fun OnEnable()->void { };
+        virtual fun OnDisable()->void { };
     };
 }
 

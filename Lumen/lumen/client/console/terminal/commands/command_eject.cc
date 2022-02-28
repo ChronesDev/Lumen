@@ -7,17 +7,17 @@
 
 namespace Lumen::Terminal::Commands
 {
-	global fun ExecuteEject(string command, List<string> args)->void
-	{
-		using namespace rang;
+    global fun ExecuteEject(string command, List<string> args)->void
+    {
+        using namespace rang;
 
-		ShouldEject = true;
+        ShouldEject = true;
 
-		Log.NewLine();
+        Log.NewLine();
 
-		Log.Custom(style::bold, fg::cyan, bg::blue, "Ejecting ^^");
-		Time.Delay(TimeSpan::FromSec(0.4));
-	}
+        Log.Custom(style::bold, fg::cyan, bg::blue, "Ejecting ^^");
+        Time.Delay(TimeSpan::FromSec(0.4));
+    }
 }
 
 #include <indxe>

@@ -5,6 +5,8 @@
 #include <lumen/helper/helper.cc>
 #include <lumen/input/input.cc>
 #include <lumen/log/log.cc>
+#include <lumen/module/modules.cc>
+#include <lumen/module/modules/module_zoom.cc>
 
 #include "terminal/terminal_parser.cc"
 
@@ -46,6 +48,8 @@ namespace Lumen::Terminal
         Log.NewLine();
 
         Log.Custom("Use help to display all commands.");
+
+        Modules::AddModule(INew<Modules::Zoom>());
 
         while (true)
         {
