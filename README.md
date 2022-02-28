@@ -5,3 +5,6 @@
 [![](https://tokei.rs/b1/github/ChronesDev/Lumen?category=code)](https://github.com/ChronesDev/Lumen)
 
 **Lumen**, a Minecraft BE legit client.
+
+> :information_source: You are currently in the main branch. 
+> Switch to the active [dev/fast-deliver](/tree/dev/fast-deliver) branch.
