@@ -71,7 +71,7 @@ namespace Lumen::Terminal::Commands
         }
         catch (std::exception ex)
         {
-            Log.Fail(fg::black, bgB::red, mod->Name, " throwed an exception while trying gather info: ", fgB::red,
+            Log.Fail(fg::black, bgB::red, mod->Name, " throwed an exception while trying to gather info: ", fgB::red,
                 bg::reset, "\n\t", ex.what());
             return;
         }

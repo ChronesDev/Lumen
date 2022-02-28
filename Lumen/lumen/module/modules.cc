@@ -6,6 +6,9 @@
 
 namespace Lumen::Modules
 {
+    fun Init()->void;
+    fun Deinit()->void;
+
     fun FindModuleByName(string name)->IPtr<Module>;
     fun TryFindModuleByName(string name)->Nullable<IPtr<Module>>;
 

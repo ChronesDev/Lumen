@@ -1,5 +1,6 @@
 #include "terminal_commands.cc"
 
+#include "commands/command_bind_unbind.cc"
 #include "commands/command_clear.cc"
 #include "commands/command_eject.cc"
 #include "commands/command_get_set.cc"
@@ -14,6 +15,18 @@ namespace Lumen::Terminal
     fun ExecuteCommand(string command, List<string> args)->bool
     {
         if (command == "") return false;
+
+        elif (command == "bind")
+        {
+            Commands::ExecuteBind(command, args);
+            return true;
+        }
+
+        elif (command == "unbind")
+        {
+            Commands::ExecuteUnbind(command, args);
+            return true;
+        }
 
         elif (command == "clear")
         {

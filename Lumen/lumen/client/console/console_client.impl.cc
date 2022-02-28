@@ -49,8 +49,6 @@ namespace Lumen::Terminal
 
         Log.Custom("Use help to display all commands.");
 
-        Modules::AddModule(INew<Modules::Zoom>());
-
         while (true)
         {
             ProcessCommand(Log.TerminalInput());
@@ -86,18 +84,23 @@ namespace Lumen::Terminal
     {
         using namespace rang;
 
-        Log("Initializing input hooks");
-
         try
         {
+            Log("Initializing input hooks");
             Detour::InitMinHook();
             Log("Initialized MinHook");
 
             Input::Init();
+
+            Log("Adding modules");
+            Modules::AddModule(INew<Modules::Zoom>());
+
+            Log("Initializing modules");
+            Modules::Init();
         }
         catch (std::exception ex)
         {
-            Log.Fail(fg::black, bgB::red, "There was an error while trying to initialize hooks:", fgB::red, bg::reset,
+            Log.Fail(fg::black, bgB::red, "There was an error while trying to initialize:", fgB::red, bg::reset,
                 " \n\t", ex.what());
             Log.NewLine();
             Log("Ejecting in 9 seconds");
@@ -110,6 +113,7 @@ namespace Lumen::Terminal
     {
         using namespace rang;
 
+        Modules::Deinit();
         Input::Deinit();
         Detour::DeinitMinHook();
     }

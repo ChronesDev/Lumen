@@ -8,6 +8,22 @@ namespace Lumen::Modules
 {
     static List<IPtr<Module>> Modules_ = { };
 
+    fun Init()->void
+    {
+        for (var& m : Modules_)
+        {
+            m->Init();
+        }
+    }
+
+    fun Deinit()->void
+    {
+        for (var& m : Modules_)
+        {
+            m->Deinit();
+        }
+    }
+
     fun FindModuleByName(string name)->IPtr<Module>
     {
         var result = TryFindModuleByName(name);

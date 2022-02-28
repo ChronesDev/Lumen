@@ -1,6 +1,7 @@
 #pragma once
 
 #include <indx>
+#include <lumen/input/key.cc>
 
 #include <indxs>
 
@@ -59,6 +60,13 @@ namespace Lumen
     public:
         virtual fun ExecuteGet(List<string> args)->void;
         virtual fun ExecuteSet(List<string> args)->void;
+
+    public:
+        virtual fun GetHasBinding()->bool { return false; }
+        INDEX_Property(get = GetHasBinding) bool HasBinding;
+
+        virtual fun BindTo(Key key)->void { };
+        virtual fun Unbind()->void { };
     };
 }
 
