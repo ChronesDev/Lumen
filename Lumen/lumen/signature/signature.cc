@@ -13,6 +13,8 @@ namespace Lumen::Signature
                                "0F B7 AC 24 C0 00 00 00";
 
     global string GetFov = "40 53 48 83 EC 70 0F 29 7C 24 50 44 0F 29 44 24 40 48 8B";
+
+    global string GetGamma = "48 83 EC ?? 80 B9 ?? ?? ?? ?? ?? 48 8D 54 24 ?? 48 8B 01 74 35 41 B8 15";
 }
 
 #include <indxe>

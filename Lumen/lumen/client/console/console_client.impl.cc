@@ -6,6 +6,8 @@
 #include <lumen/input/input.cc>
 #include <lumen/log/log.cc>
 #include <lumen/module/modules.cc>
+
+#include <lumen/module/modules/module_fullbright.cc>
 #include <lumen/module/modules/module_zoom.cc>
 
 #include "terminal/terminal_parser.cc"
@@ -93,6 +95,7 @@ namespace Lumen::Terminal
             Input::Init();
 
             Log("Adding modules");
+            Modules::AddModule(INew<Modules::Fullbright>());
             Modules::AddModule(INew<Modules::Zoom>());
 
             Log("Initializing modules");

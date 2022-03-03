@@ -1,5 +1,6 @@
 #include "modules.cc"
 
+#include "modules/module_fullbright.cc"
 #include "modules/module_zoom.cc"
 
 #include <indxs>

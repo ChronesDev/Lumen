@@ -23,6 +23,10 @@ namespace Lumen::Detour
     typedef float (*GetFovFunc)(void* that, float f, bool b);
     global GetFovFunc GetFovOriginal;
     global SimpleDetour GetFovDetour;
+
+    typedef float (*GetGammaFunc)(void* that);
+    global GetGammaFunc GetGammaOriginal;
+    global SimpleDetour GetGammaDetour;
 }
 
 #include <indxe>

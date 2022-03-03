@@ -7,8 +7,8 @@
 
 #include <indxs>
 
-fun OnGetFov_(void* that, float f, bool b)->float;
-fun OnKeyEvent_(Lumen::Key key, Lumen::KeyState state, bool& handled, bool& cancel)->void;
+static fun OnGetFov_(void* that, float f, bool b)->float;
+static fun OnKeyEvent_(Lumen::Key key, Lumen::KeyState state, bool& handled, bool& cancel)->void;
 
 static List<std::pair<string, IPtr<IEasing>>> Easings_ = {
     { "Linear", INew<LinearEasing>() },
