@@ -4,11 +4,11 @@
 
 namespace Lumen::Terminal
 {
-	global bool ShouldEject = false;
+    global bool ShouldEject = false;
 
-	fun ConsoleEntry()->void;
-	fun PrintTitle()->void;
-        fun ConsoleVersionCheckPrompt()->void;
+    fun ConsoleEntry()->void;
+    fun PrintTitle()->void;
+    fun ConsoleVersionCheckPrompt()->void;
 }
 
 #include <indxe>

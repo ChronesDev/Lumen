@@ -6,7 +6,7 @@
 
 namespace Lumen::Terminal
 {
-	fun ExecuteCommand(string command, List<string> args)->bool;
+    fun ExecuteCommand(string command, List<string> args)->bool;
 }
 
 #include <indxe>

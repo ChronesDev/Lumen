@@ -7,9 +7,9 @@
 
 static fun WINAPI Entry(HMODULE hModule)->int
 {
-	Lumen::Entry();
-	FreeLibraryAndExitThread(hModule, 0);
-	return 0;
+    Lumen::Entry();
+    FreeLibraryAndExitThread(hModule, 0);
+    return 0;
 }
 
 #ifdef INDEX_Clang
@@ -26,7 +26,7 @@ global fun WINAPI DllMain(HMODULE hModule, int reason, void* reserved)->bool
     switch (reason)
     {
     case DLL_PROCESS_ATTACH:
-	    CloseHandle(CreateThread(nullptr, 0, (LPTHREAD_START_ROUTINE)Entry, hModule, 0, nullptr));
+        CloseHandle(CreateThread(nullptr, 0, (LPTHREAD_START_ROUTINE)Entry, hModule, 0, nullptr));
         break;
     case DLL_PROCESS_DETACH:
         break;

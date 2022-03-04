@@ -6,7 +6,7 @@
 
 namespace Lumen::Terminal
 {
-	fun ProcessCommand(string input)->void;
+    fun ProcessCommand(string input)->void;
 }
 
 #include <indxe>
