@@ -306,8 +306,8 @@ fun OnKeyEvent_(Lumen::Key key, Lumen::KeyState state, bool& handled, bool& canc
     if (ZoomModule.IsNull) INDEX_THROW("ZoomModule was null.");
     if (ZoomModule->IsDisabled) return;
 
-    if (key != Key::Null && key == ZoomModule->BindZoom)
-    {
+    if (key != ZoomModule->BindZoom) return;
+
         if (state == KeyState::Pressed)
         {
             ZoomModule->IsZooming = true;
@@ -321,7 +321,7 @@ fun OnKeyEvent_(Lumen::Key key, Lumen::KeyState state, bool& handled, bool& canc
         }
 
         handled = true;
-    }
+
 }
 
 #include <indxe>
