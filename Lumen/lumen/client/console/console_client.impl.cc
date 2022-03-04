@@ -1,7 +1,9 @@
 #include "console_client.cc"
 
+#include "package/package.cc"
+
+#include <lumen/config/config.cc>
 #include <lumen/detour/detour.cc>
-#include <lumen/entry/entry.cc>
 #include <lumen/helper/helper.cc>
 #include <lumen/input/input.cc>
 #include <lumen/log/log.cc>
@@ -34,13 +36,28 @@ namespace Lumen::Terminal
         Log.Success("Loaded!");
         Log.NewLine();
 
-        try
+        // ConsoleVersionCheckPrompt()
         {
-            PreConsoleInit_();
+            try
+            {
+                ConsoleVersionCheckPrompt();
+            }
+            catch (...)
+            {
+                goto jmp_return;
+            }
         }
-        catch (...)
+
+        // PreConsoleInit_()
         {
-            goto jmp_deinit;
+            try
+            {
+                PreConsoleInit_();
+            }
+            catch (...)
+            {
+                goto jmp_deinit;
+            }
         }
 
         Log.Clear();
@@ -59,6 +76,8 @@ namespace Lumen::Terminal
 
     jmp_deinit:
         PostConsoleDeinit_();
+    jmp_return:
+        return;
     }
 
     fun PrintTitle()->void
@@ -76,10 +95,58 @@ namespace Lumen::Terminal
         Debug.Write(style::reset);
 
         //|                                    |
+        //| By CXCubeHD                        |
         //| By CXCubeHD                   v0.1 |
-        Debug.WriteLine(fg::cyan, " By CXCubeHD                   v0.1 ", fg::reset);
+
+        static string preSubPart = " By CXCubeHD                       ";
+        static string postSubPart = " ";
+
+        var version = Str("v", Config::ClientVersion.Major, ".", Config::ClientVersion.Minor);
+        var subPart
+            = preSubPart.SubString(0, Max<ulong>(preSubPart.Length - version.Length, 0)) + version + postSubPart;
+
+        Debug.WriteLine(fg::cyan, subPart, fg::reset);
 
         Log.NewLine();
+    }
+
+    fun ConsoleVersionCheckPrompt()->void
+    {
+        using namespace rang;
+
+        Log("Checking version...");
+
+        var targetVersion = Config::TargetPackageVersion;
+        var currentVersion = Package::PackageVersion();
+
+        Log("Versions: Target ", (string)targetVersion, "  Package ", (string)currentVersion);
+
+        if (targetVersion != currentVersion)
+        {
+            Time.Delay(TimeSpan::FromSec(0.3));
+            Log.Custom(fgB::magenta, "It looks like Lumen does not support the running Minecraft version.");
+
+            Debug.Write(fgB::yellow, " Do you still want to continue? ", fg::gray, "(", fgB::green, "Y", fg::gray, "/",
+                fgB::red, "N", fg::gray, ") ", fgB::cyan, "-> ");
+
+            var key = getchar();
+            getchar();
+
+            if (key == 'y' || key == 'Y')
+            {
+                // Debug.WriteLine(fg::black, bgB::green, "Y", fg::reset, bg::reset);
+                // Log.NewLine();
+                return;
+            }
+            else
+            {
+                // Debug.WriteLine(fg::black, bgB::red, "N", fg::reset, bg::reset);
+                // Log.NewLine();
+                Log("Ejecting in 9 seconds");
+                Time.Delay(TimeSpan::FromSec(9));
+                INDEX_THROW("Eject.");
+            }
+        }
     }
 
     fun PreConsoleInit_()->void
@@ -108,7 +175,7 @@ namespace Lumen::Terminal
             Log.NewLine();
             Log("Ejecting in 9 seconds");
             Time.Delay(TimeSpan::FromSec(9));
-            throw std::exception();
+            INDEX_THROW("Eject.");
         }
     }
 

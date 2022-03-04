@@ -1,5 +1,7 @@
 #include "input.cc"
 
+#include <array>
+
 #include <lumen/detour/detour.cc>
 #include <lumen/log/log.cc>
 #include <lumen/signature/signature.cc>

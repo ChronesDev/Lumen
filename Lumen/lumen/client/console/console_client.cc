@@ -8,6 +8,7 @@ namespace Lumen::Terminal
 
 	fun ConsoleEntry()->void;
 	fun PrintTitle()->void;
+        fun ConsoleVersionCheckPrompt()->void;
 }
 
 #include <indxe>

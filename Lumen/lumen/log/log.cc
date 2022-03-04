@@ -22,13 +22,11 @@ namespace Lumen
             using namespace rang;
             Debug.Log(" ", fgB::green, std::forward<TArg>(arg), std::forward<TArgs>(args)..., fg::reset);
         }
-
         template <class TArg, class... TArgs> fun Fail(TArg&& arg, TArgs&&... args)->void
         {
             using namespace rang;
             Debug.Log(" ", fgB::red, std::forward<TArg>(arg), std::forward<TArgs>(args)..., fg::reset);
         }
-
         template <class TArg, class... TArgs> fun Custom(TArg&& arg, TArgs&&... args)->void
         {
             using namespace rang;
