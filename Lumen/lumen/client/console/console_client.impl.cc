@@ -84,15 +84,15 @@ namespace Lumen::Terminal
     {
         using namespace rang;
 
-        Debug.Write(style::bold);
-        Debug.WriteLine(R"!(  _                                 )!");
-        Debug.WriteLine(R"!( | |                                )!");
-        Debug.WriteLine(R"!( | |    _   _ _ __ ___   ___ _ __   )!");
-        Debug.WriteLine(R"!( | |   | | | | '_ ` _ \ / _ \ '_ \  )!");
-        Debug.WriteLine(R"!( | |___| |_| | | | | | |  __/ | | | )!");
-        Debug.WriteLine(R"!( |______\__,_|_| |_| |_|\___|_| |_| )!");
-        Debug.WriteLine(R"!(                                    )!");
-        Debug.Write(style::reset);
+        Console.Write(style::bold);
+        Console.WriteLine(R"!(  _                                 )!");
+        Console.WriteLine(R"!( | |                                )!");
+        Console.WriteLine(R"!( | |    _   _ _ __ ___   ___ _ __   )!");
+        Console.WriteLine(R"!( | |   | | | | '_ ` _ \ / _ \ '_ \  )!");
+        Console.WriteLine(R"!( | |___| |_| | | | | | |  __/ | | | )!");
+        Console.WriteLine(R"!( |______\__,_|_| |_| |_|\___|_| |_| )!");
+        Console.WriteLine(R"!(                                    )!");
+        Console.Write(style::reset);
 
         //|                                    |
         //| By CXCubeHD                        |
@@ -105,7 +105,7 @@ namespace Lumen::Terminal
         var subPart
             = preSubPart.SubString(0, Max<ulong>(preSubPart.Length - version.Length, 0)) + version + postSubPart;
 
-        Debug.WriteLine(fg::cyan, subPart, fg::reset);
+        Console.WriteLine(fg::cyan, subPart, fg::reset);
 
         Log.NewLine();
     }

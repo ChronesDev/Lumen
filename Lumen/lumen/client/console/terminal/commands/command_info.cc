@@ -1,5 +1,6 @@
 #pragma once
 
+#include <lumen/client/console/terminal/terminal_info.cc>
 #include <lumen/log/log.cc>
 #include <lumen/module/modules.cc>
 
@@ -13,8 +14,15 @@ namespace Lumen::Terminal::Commands
 
         if (args.Length == 1 && args[0] == "help")
         {
+            Log.Custom(fgB::green, "info", "\t\t");
             Log.Custom(fgB::green, "info (module)", "\t\t", fg::blue, "Example: info zoom");
             Log.Custom(fgB::green, "info (.id)", "\t\t", fg::blue, "Example: info .lumen_zoom");
+            return;
+        }
+
+        if (args.Length == 0)
+        {
+            DisplayInfo();
             return;
         }
 

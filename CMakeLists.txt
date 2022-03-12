@@ -10,4 +10,4 @@ add_subdirectory(Index)
 add_subdirectory(Lib)
 add_subdirectory(Lumen)
 
-target_compile_options(Lumen PUBLIC "/DNOMINMAX")
+target_compile_options(Lumen PUBLIC "/DNOMINMAX" "/D_SILENCE_CLANG_COROUTINE_MESSAGE")
