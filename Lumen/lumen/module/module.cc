@@ -58,6 +58,15 @@ namespace Lumen
         virtual fun OnDisable()->void {};
 
     public:
+        [[nodiscard]] virtual fun GetIsTriggerable() const->bool { return false; }
+        INDEX_Property(get = GetIsTriggerable) bool IsTriggerable;
+
+        fun Trigger()->void;
+
+    protected:
+        virtual fun OnTrigger()->void {};
+
+    public:
         virtual fun ExecuteGet(List<string> args)->void;
         virtual fun ExecuteSet(List<string> args)->void;
 

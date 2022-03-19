@@ -15,6 +15,8 @@ namespace Lumen::Signature
     global string GetFov = "40 53 48 83 EC 70 0F 29 7C 24 50 44 0F 29 44 24 40 48 8B";
 
     global string GetGamma = "48 83 EC 28 80 B9 81 12 00 00 00 48 8D 54 24 30 48 8B 01 74 35 41 B8 15";
+
+    global string GetWorldTime = "48 8B 81 50 02 00 00 48 85 C0 74 07 8B 80 50";
 }
 
 #include <indxe>

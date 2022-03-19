@@ -10,7 +10,6 @@ fun OnGetFov(void* that, float f, bool b)->float;
 namespace Lumen::Modules
 {
     struct Zoom;
-    extern IPtr<Zoom> ZoomModule;
 
     struct Zoom : Module
     {

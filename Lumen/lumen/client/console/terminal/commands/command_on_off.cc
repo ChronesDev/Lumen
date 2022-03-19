@@ -52,6 +52,23 @@ namespace Lumen::Terminal::Commands
             }
         }
 
+        if (mod->IsTriggerable)
+        {
+            try
+            {
+                mod->Trigger();
+            }
+            catch (std::exception ex)
+            {
+                Log.Fail(fg::black, bgB::red, mod->Name, " throwed an exception while trying to trigger it: ", fgB::red,
+                    bg::reset, "\n\t", ex.what());
+                return;
+            }
+
+            Log.Success("Triggered ", mod->Name);
+            return;
+        }
+
         if (!mod->HasState)
         {
             Log.Custom(mod->Name, " cannot be toggled.");

@@ -27,6 +27,10 @@ namespace Lumen::Detour
     typedef float (*GetGammaFunc)(void* that);
     global GetGammaFunc GetGammaOriginal;
     global SimpleDetour GetGammaDetour;
+
+    typedef int (*GetWorldTimeFunc)(void* that);
+    global GetWorldTimeFunc GetWorldTimeOriginal;
+    global SimpleDetour GetWorldTimeDetour;
 }
 
 #include <indxe>

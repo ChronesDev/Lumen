@@ -11,10 +11,7 @@ namespace Lumen
         if (Initialized_) Deinit();
     }
 
-    fun Module::Init()->void
-    {
-        OnInit();
-    }
+    fun Module::Init()->void { OnInit(); }
 
     fun Module::Deinit()->void
     {
@@ -51,6 +48,20 @@ namespace Lumen
         catch (std::exception& ex)
         {
             Enabled_ = true;
+            throw ex;
+        }
+    }
+
+    fun Module::Trigger()->void
+    {
+        if (!IsTriggerable) INDEX_THROW("Cannot be triggered.");
+
+        try
+        {
+            OnTrigger();
+        }
+        catch (std::exception& ex)
+        {
             throw ex;
         }
     }
