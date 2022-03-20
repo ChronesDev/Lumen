@@ -3,6 +3,7 @@
 #include "package/package.cc"
 
 #include <lumen/config/config.cc>
+#include <lumen/data/data.cc>
 #include <lumen/detour/detour.cc>
 #include <lumen/helper/helper.cc>
 #include <lumen/input/input.cc>
@@ -157,10 +158,13 @@ namespace Lumen::Terminal
 
         try
         {
-            Log("Initializing input hooks");
-            Detour::InitMinHook();
-            Log("Initialized MinHook");
+            Log("Initializing Data System");
+            Data::Init();
 
+            Log("Initializing MinHook");
+            Detour::InitMinHook();
+
+            Log("Initializing input hooks");
             Input::Init();
 
             Log("Adding modules");
@@ -190,6 +194,7 @@ namespace Lumen::Terminal
         Modules::Deinit();
         Input::Deinit();
         Detour::DeinitMinHook();
+        Data::Deinit();
     }
 }
 

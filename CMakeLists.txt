@@ -11,3 +11,11 @@ add_subdirectory(Lib)
 add_subdirectory(Lumen)
 
 target_compile_options(Lumen PUBLIC "/DNOMINMAX" "/D_SILENCE_CLANG_COROUTINE_MESSAGE")
+
+# VCPKG Libraries
+
+find_package(ryml CONFIG REQUIRED)
+target_link_libraries(Lumen PUBLIC ryml::ryml)
+
+find_package(fmt CONFIG REQUIRED)
+target_link_libraries(Lumen PRIVATE fmt::fmt)
