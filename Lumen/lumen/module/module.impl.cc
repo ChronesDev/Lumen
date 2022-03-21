@@ -20,6 +20,18 @@ namespace Lumen
         if (IsEnabled && HasState) Disable();
     }
 
+    fun Module::SetState(bool value)->void
+    {
+        if (value)
+        {
+            if (IsDisabled) Enable();
+        }
+        elif (!value)
+        {
+            if (IsEnabled) Disable();
+        }
+    }
+
     fun Module::Enable()->void
     {
         if (IsEnabled) INDEX_THROW("Already enabled.");

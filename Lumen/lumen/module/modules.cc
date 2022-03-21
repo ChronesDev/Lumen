@@ -21,6 +21,9 @@ namespace Lumen::Modules
     fun ContainsModule(IPtr<Module> module)->bool;
     fun AddModule(IPtr<Module> module)->void;
     fun RemoveModule(IPtr<Module> module)->void;
+
+    fun MakeConfig(nlohmann::json& j)->void;
+    fun LoadConfig(nlohmann::json& j)->void;
 }
 
 #include <indxe>

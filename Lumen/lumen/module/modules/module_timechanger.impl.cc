@@ -75,6 +75,17 @@ namespace Lumen::Modules
             }
         }
     }
+
+    fun TimeChanger::MakeConfig(nlohmann::json& j)->void
+    {
+        j["IsEnabled"] = IsEnabled;
+        j["CustomTime"] = CustomTime_;
+    }
+    fun TimeChanger::LoadConfig(nlohmann::json& j)->void
+    {
+        SetState(j["IsEnabled"]);
+        CustomTime_ = j["CustomTime"];
+    }
 }
 
 static fun OnGetWorldTime_(void* that)->int

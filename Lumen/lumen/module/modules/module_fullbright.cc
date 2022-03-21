@@ -20,6 +20,10 @@ namespace Lumen::Modules
 
         fun OnInit()->void override;
         fun OnDeinit()->void override;
+
+        fun GetSupportsConfig() const->bool override { return true; }
+        fun MakeConfig(nlohmann::json& j)->void override;
+        fun LoadConfig(nlohmann::json& j)->void override;
     };
 
     global IPtr<Fullbright> FullbrightModule;

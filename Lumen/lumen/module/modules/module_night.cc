@@ -26,6 +26,11 @@ namespace Lumen::Modules
         fun OnDisable()->void override;
 
     public:
+        fun GetSupportsConfig() const->bool override { return true; }
+        fun MakeConfig(nlohmann::json& j)->void override;
+        fun LoadConfig(nlohmann::json& j)->void override;
+
+    public:
         static const int NightTime = 42000;
     };
 

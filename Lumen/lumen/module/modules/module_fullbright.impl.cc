@@ -27,6 +27,9 @@ namespace Lumen::Modules
         var self = ISelf();
         FullbrightModule = nullptr;
     }
+
+    fun Fullbright::MakeConfig(nlohmann::json& j)->void { j["IsEnabled"] = IsEnabled; }
+    fun Fullbright::LoadConfig(nlohmann::json& j)->void { SetState(j["IsEnabled"]); }
 }
 
 static fun OnGetGamma_(void* that)->float

@@ -6,6 +6,8 @@
 
 #include <indxs>
 
+static bool IsDisabling_ = false;
+
 fun OnTimeChangerDisabled_()->void;
 fun OnTimeChangerCustomTimeChanged_()->void;
 
@@ -37,8 +39,19 @@ namespace Lumen::Modules
 
     fun Night::OnDisable()->void
     {
-        if (TimeChangerModule->IsEnabled) TimeChangerModule->Disable();
+        IsDisabling_ = true;
+        __try
+        {
+            if (TimeChangerModule->IsEnabled) TimeChangerModule->Disable();
+        }
+        __finally
+        {
+            IsDisabling_ = false;
+        }
     }
+
+    fun Night::MakeConfig(nlohmann::json& j)->void { j["IsEnabled"] = IsEnabled; }
+    fun Night::LoadConfig(nlohmann::json& j)->void { SetState(j["IsEnabled"]); }
 }
 
 fun OnTimeChangerDisabled_()->void
@@ -48,6 +61,7 @@ fun OnTimeChangerDisabled_()->void
 
     if (NightModule.IsNull) INDEX_THROW("NightModule was null.");
 
+    if (IsDisabling_) return;
     NightModule->Disable();
 }
 
@@ -59,10 +73,7 @@ fun OnTimeChangerCustomTimeChanged_()->void
     if (NightModule.IsNull) INDEX_THROW("NightModule was null.");
     if (NightModule->IsDisabled) return;
 
-    if (TimeChangerModule->CustomTime != Night::NightTime)
-    {
-        NightModule->Disable();
-    }
+    if (TimeChangerModule->CustomTime != Night::NightTime) { NightModule->Disable(); }
 }
 
 #include <indxe>

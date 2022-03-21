@@ -1,5 +1,7 @@
 #pragma once
 
+#include <nlohmann/json.hpp>
+
 #include <indx>
 #include <lumen/input/key.cc>
 
@@ -40,6 +42,8 @@ namespace Lumen
         [[nodiscard]] virtual fun GetHasState() const->bool { return false; }
         INDEX_Property(get = GetHasState) bool HasState;
 
+        fun SetState(bool value)->void;
+
     protected:
         bool Enabled_ = false;
 
@@ -76,6 +80,13 @@ namespace Lumen
 
         virtual fun BindTo(Key key)->void { };
         virtual fun Unbind()->void { };
+
+    public:
+        [[nodiscard]] virtual fun GetSupportsConfig() const->bool { return false; }
+        INDEX_Property(get = GetSupportsConfig) bool SupportsConfig;
+
+        virtual fun MakeConfig(nlohmann::json& j)->void { };
+        virtual fun LoadConfig(nlohmann::json& j)->void { };
     };
 }
 

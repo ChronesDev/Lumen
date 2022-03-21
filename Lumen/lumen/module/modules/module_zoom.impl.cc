@@ -249,6 +249,40 @@ namespace Lumen::Modules
             }
         }
     }
+
+    fun Zoom::MakeConfig(nlohmann::json& j)->void
+    {
+        j["IsEnabled"] = IsEnabled;
+        j["To"] = To;
+        j["Duration"] = Duration.Sec;
+        j["BindZoom"] = Input::KeyToKeyName(BindZoom);
+        j["Easing"] = EasingName;
+        j["InFactor"] = InFactor;
+        j["OutFactor"] = OutFactor;
+    }
+    fun Zoom::LoadConfig(nlohmann::json& j)->void
+    {
+        SetState(j["IsEnabled"]);
+        To = j["To"];
+        Duration = TimeSpan::FromSec(j["Duration"]);
+        BindZoom = Input::FindKeyByKeyName((std::string)j["BindZoom"]);
+        InFactor = j["InFactor"];
+        OutFactor = j["OutFactor"];
+
+        // Easing
+        {
+            string easing = (std::string)j["Easing"];
+            for (var& e : Easings_)
+            {
+                if (e.first.ToLower() == easing.ToLower())
+                {
+                    Easing = e.second;
+                    EasingName = e.first;
+                    break;
+                }
+            }
+        }
+    }
 }
 
 fun OnGetFov_(void* that, float f, bool b)->float
@@ -308,20 +342,19 @@ fun OnKeyEvent_(Lumen::Key key, Lumen::KeyState state, bool& handled, bool& canc
 
     if (key != ZoomModule->BindZoom) return;
 
-        if (state == KeyState::Pressed)
-        {
-            ZoomModule->IsZooming = true;
-            ZoomModule->IsZoomKeyPressed = true;
-        }
+    if (state == KeyState::Pressed)
+    {
+        ZoomModule->IsZooming = true;
+        ZoomModule->IsZoomKeyPressed = true;
+    }
 
-        if (state == KeyState::Released)
-        {
-            ZoomModule->IsZooming = true;
-            ZoomModule->IsZoomKeyPressed = false;
-        }
+    if (state == KeyState::Released)
+    {
+        ZoomModule->IsZooming = true;
+        ZoomModule->IsZoomKeyPressed = false;
+    }
 
-        handled = true;
-
+    handled = true;
 }
 
 #include <indxe>

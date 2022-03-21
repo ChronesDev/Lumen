@@ -12,6 +12,9 @@ namespace Lumen::Data
     global std::filesystem::path DataPath = "";
     global string DataDirectory = "";
 
+    global std::filesystem::path ConfigPath = "";
+    global string ConfigDirectory = "";
+
     global std::filesystem::path MinecraftDataPath = "";
     global string MinecraftDataDirectory = "";
 

@@ -29,6 +29,10 @@ namespace Lumen::Modules
         fun ExecuteGet(List<string> args)->void override;
         fun ExecuteSet(List<string> args)->void override;
 
+        fun GetSupportsConfig() const->bool override { return true; }
+        fun MakeConfig(nlohmann::json& j)->void override;
+        fun LoadConfig(nlohmann::json& j)->void override;
+
         Event<void()> Enabled;
         Event<void()> Disabled;
 

@@ -1,4 +1,6 @@
 cmake_minimum_required(VERSION 3.21)
+#set(CMAKE_TRY_COMPILE_TARGET_TYPE "STATIC_LIBRARY")
+
 project(Lumen)
 
 set(CMAKE_CXX_STANDARD 23)
@@ -19,3 +21,6 @@ target_link_libraries(Lumen PUBLIC ryml::ryml)
 
 find_package(fmt CONFIG REQUIRED)
 target_link_libraries(Lumen PRIVATE fmt::fmt)
+
+find_package(nlohmann_json CONFIG REQUIRED)
+target_link_libraries(Lumen PRIVATE nlohmann_json nlohmann_json::nlohmann_json)

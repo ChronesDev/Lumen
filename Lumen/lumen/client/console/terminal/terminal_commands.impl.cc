@@ -7,6 +7,7 @@
 #include "commands/command_help.cc"
 #include "commands/command_info.cc"
 #include "commands/command_on_off.cc"
+#include "commands/command_save_load.cc"
 
 #include <indxs>
 
@@ -73,6 +74,12 @@ namespace Lumen::Terminal
         elif (command == "off")
         {
             Commands::ExecuteOff(command, args);
+            return true;
+        }
+
+        elif (command == "save")
+        {
+            Commands::ExecuteSave(command, args);
             return true;
         }
 

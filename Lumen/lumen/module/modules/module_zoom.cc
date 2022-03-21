@@ -30,6 +30,10 @@ namespace Lumen::Modules
         fun BindTo(Key key)->void override { BindZoom = key; }
         fun Unbind()->void override { BindZoom = Key::Null; }
 
+        fun GetSupportsConfig() const->bool override { return true; }
+        fun MakeConfig(nlohmann::json& j)->void override;
+        fun LoadConfig(nlohmann::json& j)->void override;
+
         bool IsZooming = false;
 
         float To = 40.0f;

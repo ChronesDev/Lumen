@@ -4,7 +4,7 @@
 
 namespace Lumen::Modules
 {
-    static List<IPtr<Module>> Modules_ = { };
+    static List<IPtr<Module>> Modules_ = {};
 
     fun Init()->void
     {
@@ -13,7 +13,6 @@ namespace Lumen::Modules
             m->Init();
         }
     }
-
     fun Deinit()->void
     {
         for (var& m : Modules_)
@@ -44,7 +43,6 @@ namespace Lumen::Modules
         if (!result.HasValue) INDEX_THROW("Could not find any modules with this name.");
         return result.Value;
     }
-
     fun TryFindModuleByNameAnyCase(string name)->Nullable<IPtr<Module>>
     {
         name = name.ToLower();
@@ -61,7 +59,6 @@ namespace Lumen::Modules
         if (!result.HasValue) INDEX_THROW("Could not find any modules with this id.");
         return result.Value;
     }
-
     fun TryFindModuleById(string id)->Nullable<IPtr<Module>>
     {
         for (var& m : Modules_)
@@ -78,8 +75,40 @@ namespace Lumen::Modules
         if (Modules_.Contains(module)) INDEX_THROW("The module already exists.");
         Modules_.Add(module);
     }
-
     fun RemoveModule(IPtr<Module> module)->void { Modules_.Remove(module); }
+
+    fun MakeConfig(nlohmann::json& j)->void
+    {
+        if (!j.contains("@LumenModules")) return;
+
+        for (var& m : Modules_)
+        {
+            nlohmann::json jm = {};
+            jm["@LumenModule"] = "*";
+
+            m->MakeConfig(jm);
+            j[Str(".", m->Id)] = jm;
+        }
+    }
+    fun LoadConfig(nlohmann::json& j)->void
+    {
+        if (!j.contains("@LumenModules")) return;
+
+        for (var& ji : j.items())
+        {
+            for (var& m : Modules_)
+            {
+                if (ji.key() == Str(".", m->Id))
+                {
+                    nlohmann::json& jm = ji.value();
+                    if (!jm.contains("@LumenModule")) break;
+
+                    m->LoadConfig(jm);
+                    break;
+                }
+            }
+        }
+    }
 }
 
 #include <indxe>
