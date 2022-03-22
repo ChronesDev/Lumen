@@ -15,6 +15,9 @@ namespace Lumen::Helper
     fun ConfigureConsoleStyle()->void;
 
     fun WaitUntilGameIsLoaded()->void;
+
+    fun SetClipboard(string text)->void;
+    fun GetClipboard()->string;
 }
 
 #include <indxe>

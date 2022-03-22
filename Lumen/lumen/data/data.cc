@@ -22,7 +22,9 @@ namespace Lumen::Data
     fun Deinit()->void;
 
     fun IsConfigNameValid(string name)->bool;
-    fun MakeConfigData()->nlohmann::json;
+    fun IsConfigValid(nlohmann::json& j)->bool;
+    fun CheckConfig(nlohmann::json& j)->void;
+    fun MakeConfigData(string name)->nlohmann::json;
     fun LoadConfigData(nlohmann::json& j)->void;
 }
 

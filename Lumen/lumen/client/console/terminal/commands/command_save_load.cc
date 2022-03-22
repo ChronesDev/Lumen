@@ -37,11 +37,10 @@ namespace Lumen::Terminal::Commands
 
         try
         {
-            nlohmann::json j = Data::MakeConfigData();
+            nlohmann::json j = Data::MakeConfigData(args[0]);
             string s = to_string(j);
 
             var path = Data::ConfigPath / "configs" / (std::string)args[0] / "lumen_config.lu";
-            std::filesystem::create_directories(path.parent_path());
 
             if (std::filesystem::exists(path))
             {
@@ -61,13 +60,21 @@ namespace Lumen::Terminal::Commands
                 std::filesystem::remove(path);
             }
 
+            std::filesystem::create_directories(path.parent_path());
+
             std::ofstream ofs(path);
             ofs << s;
             ofs.close();
         }
+        catch (std::runtime_error& ex)
+        {
+            Log.Fail("An exception has been throwed while trying to make a config.");
+            Log.Fail(fg::red, "\t", ex.what());
+        }
         catch (std::exception& ex)
         {
             Log.Fail("An exception has been throwed while trying to make a config.");
+            Log.Fail(fg::red, "\t", ex.what());
         }
     }
 
@@ -114,18 +121,52 @@ namespace Lumen::Terminal::Commands
             Data::LoadConfigData(j);
 
             {
-                string name = j["Name"];
-                string author = j["Author"];
+                string name = (std::string)j["Name"];
+                string author = (std::string)j["Author"];
                 author = author.empty() ? "?" : author;
-                Version target = Version::Parse(j["Target"]);
+                Version target = Version::Parse((std::string)j["Target"]);
 
                 Log.NewLine();
-                //Log.Custom(fgB::green, name, fg::blue, " (by ", fgB::cyan, author, fg::blue, ")");
-                //Log.Custom(fg::reset, "Description: ", fgB::blue, description);
-                //Log.Custom(fg::reset, "HasState: ", fgB::blue, hasState ? "true" : "false");
-                //if (hasState) Log.Custom(fg::reset, "Enabled: ", fgB::blue, enabled ? "true" : "false");
+
+                /*
+                 * |     __                                  ______            _____       |
+                 * |    / /   __  ______ ___  ___  ____     / ____/___  ____  / __(_)___ _ |
+                 * |   / /   / / / / __ `__ \/ _ \/ __ \   / /   / __ \/ __ \/ /_/ / __ `/ |
+                 * |  / /___/ /_/ / / / / / /  __/ / / /  / /___/ /_/ / / / / __/ / /_/ /  |
+                 * | /_____/\__,_/_/ /_/ /_/\___/_/ /_/   \____/\____/_/ /_/_/ /_/\__, /   |
+                 * |                                                             /____/    |
+                 */
+
+                /*
+                 * |    ______            _____       |
+                 * |   / ____/___  ____  / __(_)___ _ |
+                 * |  / /   / __ \/ __ \/ /_/ / __ `/ |
+                 * | / /___/ /_/ / / / / __/ / /_/ /  |
+                 * | \____/\____/_/ /_/_/ /_/\__, /   |
+                 * |                        /____/    |
+                 */
+
+                Console.WriteLine(fgB::yellow, R"(    ______            _____       )");
+                Console.WriteLine(fgB::yellow, R"(   / ____/___  ____  / __(_)___ _ )");
+                Console.WriteLine(fgB::yellow, R"(  / /   / __ \/ __ \/ /_/ / __ `/ )");
+                Console.WriteLine(fgB::yellow, R"( / /___/ /_/ / / / / __/ / /_/ /  )");
+                Console.WriteLine(fgB::yellow, R"( \____/\____/_/ /_/_/ /_/\__, /   )");
+                Console.WriteLine(fgB::yellow, R"(                        /____/    )");
+
+                Console.Write(" ");
+                if (author == "?") Console.WriteLine(fgB::cyan, name, fg::reset);
+                else
+                    Console.WriteLine(fgB::cyan, name, fg::blue, " (by ", fg::cyan, author, fg::blue, ")");
+
                 Log.NewLine();
+
+                Log.Success(fgB::green, "Successfully loaded ", fgB::cyan, name, fgB::green, ".");
             }
+        }
+        catch (std::runtime_error& ex)
+        {
+            Log.Fail("An exception has been throwed while trying to load a config.");
+            Log.Fail(fg::red, "\t", ex.what());
         }
         catch (std::exception& ex)
         {

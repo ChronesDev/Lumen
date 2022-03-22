@@ -2,6 +2,7 @@
 
 #include "commands/command_bind_unbind.cc"
 #include "commands/command_clear.cc"
+#include "commands/command_config.cc"
 #include "commands/command_eject.cc"
 #include "commands/command_get_set.cc"
 #include "commands/command_help.cc"
@@ -32,6 +33,12 @@ namespace Lumen::Terminal
         elif (command == "clear")
         {
             Commands::ExecuteClear(command, args);
+            return true;
+        }
+
+        elif (command == "config")
+        {
+            Commands::ExecuteConfig(command, args);
             return true;
         }
 
@@ -80,6 +87,12 @@ namespace Lumen::Terminal
         elif (command == "save")
         {
             Commands::ExecuteSave(command, args);
+            return true;
+        }
+
+        elif (command == "load")
+        {
+            Commands::ExecuteLoad(command, args);
             return true;
         }
 
