@@ -1,7 +1,7 @@
 #pragma once
 
 #include <filesystem>
-#include <ryml/ryml.hpp>
+#include <nlohmann/json.hpp>
 
 #include <indx>
 
@@ -20,6 +20,10 @@ namespace Lumen::Data
 
     fun Init()->void;
     fun Deinit()->void;
+
+    fun IsConfigNameValid(string name)->bool;
+    fun MakeConfigData()->nlohmann::json;
+    fun LoadConfigData(nlohmann::json& j)->void;
 }
 
 #include <indxe>
