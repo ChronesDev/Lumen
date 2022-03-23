@@ -17,10 +17,13 @@ target_compile_options(Lumen PUBLIC "/DNOMINMAX" "/D_SILENCE_CLANG_COROUTINE_MES
 # VCPKG Libraries
 
 find_package(ryml CONFIG REQUIRED)
-target_link_libraries(Lumen PUBLIC ryml::ryml)
+target_link_libraries(Lumen PRIVATE ryml::ryml)
 
 find_package(fmt CONFIG REQUIRED)
 target_link_libraries(Lumen PRIVATE fmt::fmt)
 
 find_package(nlohmann_json CONFIG REQUIRED)
 target_link_libraries(Lumen PRIVATE nlohmann_json nlohmann_json::nlohmann_json)
+
+find_package(cpr CONFIG REQUIRED)
+target_link_libraries(Lumen PRIVATE cpr::cpr)
