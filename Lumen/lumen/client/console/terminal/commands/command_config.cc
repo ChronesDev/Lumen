@@ -169,7 +169,8 @@ namespace Lumen::Terminal::Commands
             try
             {
                 nlohmann::json j = Data::MakeConfigData(args[1]);
-                string s = to_string(j);
+                s = to_string(j);
+                if (s == "") INDEX_THROW("Unexpected empty config.");
             }
             catch (std::runtime_error& ex)
             {
@@ -193,6 +194,8 @@ namespace Lumen::Terminal::Commands
                 Log.Fail("An exception was thrown while trying to write to the clipboard.");
                 return;
             }
+
+            Log.Success("Successfully copied config to clipboard.");
 
             return;
         }
