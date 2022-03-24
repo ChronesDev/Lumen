@@ -21,6 +21,9 @@ namespace Lumen::Terminal::Commands
         Log.Custom(fg::cyan, "get          ", fg::gray, " - Gets a property from a module.");
         Log.Custom(fg::cyan, "bind         ", fg::gray, " - Binds a key to a module.");
         Log.Custom(fg::cyan, "unbind       ", fg::gray, " - Unbinds a module.");
+        Log.Custom(fg::cyan, "config       ", fg::gray, " - Manages configurations.");
+        Log.Custom(fg::cyan, "save         ", fg::gray, " - Saves a config.");
+        Log.Custom(fg::cyan, "load         ", fg::gray, " - Loads a config.");
         Log.NewLine();
     }
 }

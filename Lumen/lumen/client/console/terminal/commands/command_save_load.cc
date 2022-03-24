@@ -70,11 +70,13 @@ namespace Lumen::Terminal::Commands
         {
             Log.Fail("An exception has been throwed while trying to make a config.");
             Log.Fail(fg::red, "\t", ex.what());
+            return;
         }
         catch (std::exception& ex)
         {
             Log.Fail("An exception has been throwed while trying to make a config.");
             Log.Fail(fg::red, "\t", ex.what());
+            return;
         }
     }
 
@@ -167,11 +169,13 @@ namespace Lumen::Terminal::Commands
         {
             Log.Fail("An exception has been throwed while trying to load a config.");
             Log.Fail(fg::red, "\t", ex.what());
+            return;
         }
         catch (std::exception& ex)
         {
             Log.Fail("An exception has been throwed while trying to load a config.");
             Log.Fail(fg::red, "\t", ex.what());
+            return;
         }
     }
 }
