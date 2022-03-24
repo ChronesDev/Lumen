@@ -44,6 +44,37 @@ namespace Lumen::Terminal::Commands
                 return;
             }
 
+            var configsPath = Data::ConfigPath / "configs";
+            if (!std::filesystem::exists(configsPath))
+            {
+                Log.Custom("No configs were found.");
+                return;
+            }
+
+            List<string> configs;
+            for (var& d : std::filesystem::directory_iterator(configsPath))
+            {
+                if (d.is_directory())
+                {
+                    var name = d.path().filename();
+                    if (Data::IsConfigNameValid(name))
+                    {
+                        configs.Add(name);
+                    }
+                }
+            }
+
+            if (configs.Length == 0)
+            {
+                Log.Custom("No configs were found.");
+                return;
+            }
+
+            for (var& c : configs)
+            {
+                Log.Custom(fgB::blue, "-> ", c);
+            }
+
             return;
         }
 
