@@ -148,7 +148,7 @@ namespace Lumen::Terminal::Commands
                     }
                 }
 
-                Log.Fail("A config by the name ", style::reversed, args[1], style::reversed, " wasn't found.");
+                Log.Fail("A config by the name ", style::reversed, args[1], style::reset, " wasn't found.");
                 return;
             }
             catch (std::runtime_error& ex)
