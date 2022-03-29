@@ -6,7 +6,7 @@
 
 namespace Lumen::Render::DX11On12
 {
-    fun IsInitialized()->bool;
+    fun HasInit()->bool;
     fun Init()->void;
     fun Deinit()->void;
 }
