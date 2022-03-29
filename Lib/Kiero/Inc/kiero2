@@ -1,0 +1,19 @@
+#pragma once
+
+#include <MinHook.h>
+#include <kiero.h>
+
+namespace kiero
+{
+    inline void unbind_MH_RemoveHook(uint16_t _index)
+    {
+        auto g_renderType = getRenderType();
+        auto g_methodsTable = getMethodsTable();
+
+        if (g_renderType != RenderType::None)
+        {
+            unbind(_index);
+            MH_RemoveHook((void*)g_methodsTable[_index]);
+        }
+    }
+}
