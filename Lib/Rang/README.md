@@ -2,4 +2,4 @@
 
 From __https://github.com/agauniyal/rang__
 
-License at that time: **MIT**
+License at that time: **The Unlicense**
