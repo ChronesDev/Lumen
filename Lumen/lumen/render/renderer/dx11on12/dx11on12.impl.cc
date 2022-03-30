@@ -1,8 +1,5 @@
 #include "dx11on12.cc"
 
-#include "dx11on12.d3d12.cc"
-#include "dx11on12.dxgi.cc"
-
 #include <indxs>
 
 namespace Lumen::Render::DX11On12

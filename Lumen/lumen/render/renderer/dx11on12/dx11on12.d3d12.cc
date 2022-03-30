@@ -1,8 +1,7 @@
 #pragma once
 
 #include <d3d12.h>
-
-#include "dx11on12.cc"
+#include <indx>
 
 #include <indxs>
 

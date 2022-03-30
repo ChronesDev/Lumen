@@ -1,8 +1,7 @@
 #pragma once
 
 #include <dxgi1_6.h>
-
-#include "dx11on12.cc"
+#include <indx>
 
 #include <indxs>
 
