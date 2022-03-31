@@ -1,4 +1,4 @@
-#include <kiero2>
+#include <lumen/ext/kiero/kiero.cc>
 
 #include "d2d.cc"
 
@@ -11,6 +11,7 @@ namespace Lumen::Render::D2D
     static fun RenderInit_()->void;
     static fun RenderDeinit_()->void;
     static fun RenderRelease_()->void;
+    static fun RenderReleaseSub_()->void;
 
     static fun OnPresent_(IDXGISwapChain3* SwapChainPtr, uint SyncInterval, uint Flags)->HRESULT;
     static fun OnResizeBuffers_(IDXGISwapChain* SwapChainPtr, uint BufferCount, uint Width, uint Height,
@@ -30,8 +31,7 @@ namespace Lumen::Render::D2D
     {
         if (Initialized_) INDEX_THROW("Already initialized.");
 
-        if (kiero::init(kiero::RenderType::D3D12) != kiero::Status::Success)
-            INDEX_THROW("Kiero Failed.");
+        Ext::Kiero::Init(kiero::RenderType::D3D12);
 
         RenderInit_();
 
@@ -43,7 +43,7 @@ namespace Lumen::Render::D2D
 
         RenderDeinit_();
 
-        kiero::shutdown();
+        Ext::Kiero::Deinit();
 
         Initialized_ = false;
     }
@@ -62,7 +62,6 @@ namespace Lumen::Render::D2D
     static uint Height = 0;
 
     static uint CurrentBufferIndex = 0;
-    static com_ptr<ID2D1Bitmap> BackBuffer;
 
     static fun RenderInit_()->void
     {
@@ -89,7 +88,15 @@ namespace Lumen::Render::D2D
     {
         DXRelease.Invoke();
         res::ReleaseAll();
+        RenderReleaseSub_();
         InitializeOnNextCall_ = true;
+    }
+    static fun RenderReleaseSub_()->void
+    {
+        SwapChain_ = {};
+        D3D12CommandQueue_ = {};
+
+        CurrentBufferIndex = 0;
     }
 
     static fun OnPresent_(IDXGISwapChain3* SwapChainPtr, uint SyncInterval, uint Flags)->HRESULT
@@ -137,7 +144,7 @@ namespace Lumen::Render::D2D
         ID3D12CommandQueue* CommandQueuePtr, uint CommandListsCount, ID3D12CommandList* CommandListPtr)
         ->void
     {
-        if (!D3D12CommandQueue_)
+        if (D3D12CommandQueue_ == nullptr)
         {
             D3D12CommandQueue_ = CommandQueuePtr;
             res::D3D12CommandQueue = D3D12CommandQueue_;
@@ -157,7 +164,7 @@ namespace Lumen::Render::D2D
 
         if (SwapChain_->GetDevice(__uuidof(ID3D12Device), res::D3D12Device.put_void()) != S_OK)
         {
-            throw std::exception("Your device does not support DirectX12 for Minecraft.");
+            INDEX_THROW("Your device does not support DirectX12 for Minecraft.");
         }
 
         // Create D311On12Device
@@ -288,11 +295,13 @@ namespace Lumen::Render::D2D
         dc->BeginDraw();
 
         {
-            var r = D2D1::RectF(10, 10, 40, 40);
-            var c = D2D1::ColorF(D2D1::ColorF::LightSlateGray);
+            var r = D2D1::RoundedRect(
+                D2D1::RectF(10, 10, 40, 40),
+                5, 5);
+            var c = D2D1::ColorF(D2D1::ColorF::Red);
             com_ptr<ID2D1SolidColorBrush> b;
             dc->CreateSolidColorBrush(c, b.put());
-            dc->DrawRectangle(r, b.get());
+            dc->FillRoundedRectangle(r, b.get());
 
             ThrowIfFailed(dc->EndDraw());
             dc->BeginDraw();
