@@ -1,6 +1,7 @@
 #pragma once
 
 #include <winrt/base.h>
+#include <lumen/ext/d2d/d2d.cc>
 
 #include <indx>
 
@@ -28,7 +29,6 @@ namespace Lumen::Render::D2D
     private:
         HRESULT result;
     };
-
     global fun ThrowIfFailed(HRESULT hr)
     {
         if (FAILED(hr)) { throw ComException(hr); }
@@ -42,6 +42,52 @@ namespace Lumen::Render::D2D
             list.push_back(defaultValue);
         }
         return list;
+    }
+}
+
+namespace Lumen::Render::D2D
+{
+    global fun CopyBitmap(ID2D1DeviceContext* dc, com_ptr<ID2D1Bitmap>& from, com_ptr<ID2D1Bitmap>& to)
+    {
+        if (from.get() == nullptr) throw std::exception("from was nullptr.");
+
+        if (to.get() == nullptr)
+        {
+            D2D1_BITMAP_PROPERTIES props = D2D1::BitmapProperties(from->GetPixelFormat());
+            ThrowIfFailed(dc->CreateBitmap(from->GetPixelSize(), props, to.put()));
+        }
+        else if (from->GetPixelSize() != to->GetPixelSize())
+        {
+            to = nullptr;
+            D2D1_BITMAP_PROPERTIES props = D2D1::BitmapProperties(from->GetPixelFormat());
+            ThrowIfFailed(dc->CreateBitmap(from->GetPixelSize(), props, to.put()));
+        }
+
+        var destPoint = D2D1::Point2U(0, 0);
+        var size = from->GetPixelSize();
+        var rect = D2D1::RectU(0, 0, size.width, size.height);
+        to->CopyFromBitmap(&destPoint, from.get(), &rect);
+    }
+    global fun CopyBitmap(ID2D1DeviceContext* dc, com_ptr<ID2D1Bitmap1>& from, com_ptr<ID2D1Bitmap>& to)
+    {
+        if (from.get() == nullptr) throw std::exception("from was nullptr.");
+
+        if (to.get() == nullptr)
+        {
+            D2D1_BITMAP_PROPERTIES props = D2D1::BitmapProperties(from->GetPixelFormat());
+            ThrowIfFailed(dc->CreateBitmap(from->GetPixelSize(), props, to.put()));
+        }
+        else if (from->GetPixelSize() != to->GetPixelSize())
+        {
+            to = nullptr;
+            D2D1_BITMAP_PROPERTIES props = D2D1::BitmapProperties(from->GetPixelFormat());
+            ThrowIfFailed(dc->CreateBitmap(from->GetPixelSize(), props, to.put()));
+        }
+
+        var destPoint = D2D1::Point2U(0, 0);
+        var size = from->GetPixelSize();
+        var rect = D2D1::RectU(0, 0, size.width, size.height);
+        to->CopyFromBitmap(&destPoint, from.get(), &rect);
     }
 }
 

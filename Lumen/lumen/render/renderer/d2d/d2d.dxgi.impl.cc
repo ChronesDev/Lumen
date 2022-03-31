@@ -8,9 +8,11 @@ namespace Lumen::Render::D2D
 {
     static bool IsDXGIPresentHooked_ = false;
     static bool IsDXGIResizeBuffersHooked_ = false;
+    static bool IsDXGIReleaseHooked_ = false;
 
     [[maybe_unused]] fun IsDXGIPresentHooked()->bool { return IsDXGIPresentHooked_; }
     [[maybe_unused]] fun IsDXGIResizeBuffersHooked()->bool { return IsDXGIResizeBuffersHooked_; }
+    [[maybe_unused]] fun IsDXGIReleaseHooked()->bool { return IsDXGIReleaseHooked_; }
 
     fun HookDXGIPresent(DXGIPresentFunc f)->void
     {
@@ -56,6 +58,29 @@ namespace Lumen::Render::D2D
         kiero::unbind_MH_RemoveHook(145);
 
         IsDXGIResizeBuffersHooked_ = false;
+    }
+
+    fun HookDXGIRelease(DXGIReleaseFunc f)->void
+    {
+        if (f == nullptr) INDEX_THROW("f was nullptr.");
+        if (IsDXGIReleaseHooked_) INDEX_THROW("Already hooked.");
+
+        if (!Ext::Kiero::HasInit()) INDEX_THROW("Kiero hasn't been initialized yet.");
+
+        if (kiero::bind(134, (void**)&DXGIReleaseOriginal, (void*)f) != kiero::Status::Success)
+            INDEX_THROW("kiero::bind failed (DXGIReleaseOriginal).");
+
+        IsDXGIReleaseHooked_ = true;
+    }
+    fun UnhookDXGIRelease()->void
+    {
+        if (!IsDXGIReleaseHooked_) INDEX_THROW("Already unhooked.");
+
+        if (!Ext::Kiero::HasInit()) return;
+
+        kiero::unbind_MH_RemoveHook(134);
+
+        IsDXGIReleaseHooked_ = false;
     }
 }
 

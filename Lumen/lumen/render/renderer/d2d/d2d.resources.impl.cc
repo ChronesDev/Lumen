@@ -27,10 +27,6 @@ namespace Lumen::Render::D2D::Res
 
         BufferCount = 0;
 
-        for (auto& f : FrameContext)
-        {
-            if ((uintptr_t)f.MainRenderTargetResourcePtr > 69420) f.MainRenderTargetResourcePtr->Release();
-        }
         FrameContext = {};
     }
 }

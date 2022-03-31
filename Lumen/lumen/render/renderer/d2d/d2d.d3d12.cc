@@ -1,6 +1,7 @@
 #pragma once
 
-#include <d3d12.h>
+#include <lumen/ext/dx/dx.cc>
+
 #include <indx>
 
 #include <indxs>

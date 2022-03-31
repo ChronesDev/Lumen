@@ -2,10 +2,8 @@
 
 #include <winrt/base.h>
 
-#include <dxgi1_6.h>
-#include <d3d12.h>
-#include <d3d11on12.h>
-#include <d2d1_3.h>
+#include <lumen/ext/dx/dx.cc>
+#include <lumen/ext/d2d/d2d.cc>
 
 #include <indx>
 

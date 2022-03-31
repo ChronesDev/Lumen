@@ -1,4 +1,5 @@
 #include <lumen/ext/kiero/kiero.cc>
+#include <mutex>
 
 #include "d2d.cc"
 
@@ -17,6 +18,7 @@ namespace Lumen::Render::D2D
     static fun OnResizeBuffers_(IDXGISwapChain* SwapChainPtr, uint BufferCount, uint Width, uint Height,
         DXGI_FORMAT NewFormat, uint SwapChainFlags)
         ->HRESULT;
+    static fun OnRelease_(IDXGISwapChain3* SwapChainPtr)->ulong;
     static fun OnExecuteCommandLists_(
         ID3D12CommandQueue* CommandQueuePtr, uint CommandListsCount, ID3D12CommandList* CommandListPtr)
         ->void;
@@ -48,6 +50,8 @@ namespace Lumen::Render::D2D
         Initialized_ = false;
     }
 
+    static std::mutex Lock_;
+
     static bool InitializeOnNextCall_ = false;
     static bool ReleaseOnNextCall_ = false;
     static bool IgnoreRender_ = false;
@@ -63,10 +67,14 @@ namespace Lumen::Render::D2D
 
     static uint CurrentBufferIndex = 0;
 
+    static com_ptr<ID2D1Bitmap> BackBuffer;
+    static com_ptr<ID2D1Effect> ColorEffect;
+
     static fun RenderInit_()->void
     {
         HookDXGIPresent(OnPresent_);
         HookDXGIResizeBuffers(OnResizeBuffers_);
+        HookDXGIRelease(OnRelease_);
         HookD3D12ExecuteCommandLists(OnExecuteCommandLists_);
 
         InitializeOnNextCall_ = true;
@@ -76,6 +84,7 @@ namespace Lumen::Render::D2D
     {
         if (IsDXGIPresentHooked()) UnhookDXGIPresent();
         if (IsDXGIResizeBuffersHooked()) UnhookDXGIResizeBuffers();
+        if (IsDXGIReleaseHooked()) UnhookDXGIRelease();
         if (IsD3D12ExecuteCommandListsHooked()) UnhookD3D12ExecuteCommandLists();
 
         RenderRelease_();
@@ -97,10 +106,15 @@ namespace Lumen::Render::D2D
         D3D12CommandQueue_ = {};
 
         CurrentBufferIndex = 0;
+
+        BackBuffer = {};
+        ColorEffect = {};
     }
 
     static fun OnPresent_(IDXGISwapChain3* SwapChainPtr, uint SyncInterval, uint Flags)->HRESULT
     {
+        var lock = std::lock_guard(Lock_);
+
         // Present
 
         SwapChain_ = SwapChainPtr;
@@ -133,9 +147,9 @@ namespace Lumen::Render::D2D
         DXGI_FORMAT NewFormat, uint SwapChainFlags)
         ->HRESULT
     {
-        SkipFrames = 10;
+        var lock = std::lock_guard(Lock_);
 
-        RenderRelease_();
+        if (SwapChainPtr == SwapChain_) { RenderRelease_(); }
 
         return DXGIResizeBuffersOriginal(SwapChainPtr, BufferCount, Width, Height, NewFormat, SwapChainFlags);
     }
@@ -153,6 +167,13 @@ namespace Lumen::Render::D2D
         return D3D12ExecuteCommandListsOriginal(CommandQueuePtr, CommandListsCount, CommandListPtr);
     }
 
+    static fun OnRelease_(IDXGISwapChain3* SwapChainPtr)->ulong
+    {
+        if (SwapChainPtr == SwapChain_) RenderRelease_();
+
+        return DXGIReleaseOriginal(SwapChainPtr);
+    }
+
     static fun OnRenderInit_()->void
     {
         // Initialize
@@ -163,13 +184,9 @@ namespace Lumen::Render::D2D
         InitializeOnNextCall_ = false;
 
         if (SwapChain_->GetDevice(__uuidof(ID3D12Device), res::D3D12Device.put_void()) != S_OK)
-        {
             INDEX_THROW("Your device does not support DirectX12 for Minecraft.");
-        }
 
         // Create D311On12Device
-        com_ptr<ID3D12CommandQueue> commandQueue;
-        commandQueue.attach(res::D3D12CommandQueue);
         ThrowIfFailed(D3D11On12CreateDevice((IUnknown*)res::D3D12Device.get(),
             D3D11_CREATE_DEVICE_FLAG::D3D11_CREATE_DEVICE_SINGLETHREADED
                 | D3D11_CREATE_DEVICE_FLAG::D3D11_CREATE_DEVICE_BGRA_SUPPORT,
@@ -224,18 +241,18 @@ namespace Lumen::Render::D2D
 
             for (int i = 0; i < bufferCount; i++)
             {
-                ID3D12Resource* backBufferPtr = nullptr;
+                com_ptr<ID3D12Resource> backBufferPtr = nullptr;
                 res::FrameContext[i].MainRenderTargetDescriptor = rtvHandle;
-                ThrowIfFailed(SwapChain_->GetBuffer(i, IID_PPV_ARGS(&backBufferPtr)));
-                res::D3D12Device->CreateRenderTargetView(backBufferPtr, nullptr, rtvHandle);
-                res::FrameContext[i].MainRenderTargetResourcePtr = backBufferPtr;
+                ThrowIfFailed(SwapChain_->GetBuffer(i, IID_PPV_ARGS(backBufferPtr.put())));
+                res::D3D12Device->CreateRenderTargetView(backBufferPtr.get(), nullptr, rtvHandle);
+                res::FrameContext[i].MainRenderTargetResource = backBufferPtr;
                 rtvHandle.ptr += rtvDescriptorSize;
                 D3D12_RESOURCE_DESC backBufferDescriptor = backBufferPtr->GetDesc();
                 Width = backBufferDescriptor.Width;
                 Height = backBufferDescriptor.Height;
 
                 D3D11_RESOURCE_FLAGS d3d11_flags = { D3D11_BIND_RENDER_TARGET };
-                ThrowIfFailed(res::D3D11On12Device->CreateWrappedResource(backBufferPtr, &d3d11_flags,
+                ThrowIfFailed(res::D3D11On12Device->CreateWrappedResource(backBufferPtr.get(), &d3d11_flags,
                     D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT,
                     IID_PPV_ARGS(res::D3D11Resources[i].put())));
 
@@ -288,24 +305,30 @@ namespace Lumen::Render::D2D
         dc->SetTarget(res::D2D1Bitmaps[i].get());
         dc->BeginDraw();
 
+        {
+            if (!ColorEffect) dc->CreateEffect(CLSID_D2D1Grayscale, ColorEffect.put());
+
+            CopyBitmap(dc, res::D2D1Bitmaps[i], BackBuffer);
+            ColorEffect->SetInput(0, BackBuffer.get());
+            dc->DrawImage(ColorEffect.get());
+        }
+
         // DXRender
         DXRender.Invoke();
 
         ThrowIfFailed(dc->EndDraw());
         dc->BeginDraw();
 
-        {
-            var r = D2D1::RoundedRect(
-                D2D1::RectF(10, 10, 40, 40),
-                5, 5);
-            var c = D2D1::ColorF(D2D1::ColorF::Red);
-            com_ptr<ID2D1SolidColorBrush> b;
-            dc->CreateSolidColorBrush(c, b.put());
-            dc->FillRoundedRectangle(r, b.get());
-
-            ThrowIfFailed(dc->EndDraw());
-            dc->BeginDraw();
-        }
+        //        {
+        //            var r = D2D1::RoundedRect(D2D1::RectF(10, 10, 40, 40), 5, 5);
+        //            var c = D2D1::ColorF(D2D1::ColorF::Red);
+        //            com_ptr<ID2D1SolidColorBrush> b;
+        //            dc->CreateSolidColorBrush(c, b.put());
+        //            dc->FillRoundedRectangle(r, b.get());
+        //
+        //            ThrowIfFailed(dc->EndDraw());
+        //            dc->BeginDraw();
+        //        }
 
         // End Render
         ThrowIfFailed(dc->EndDraw());
