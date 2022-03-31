@@ -1,12 +1,10 @@
-#pragma comment(lib, "dxgi.lib")
-
 #include <lumen/ext/kiero/kiero.cc>
 
-#include "dx11on12.dxgi.cc"
+#include "d2d.dxgi.cc"
 
 #include <indxs>
 
-namespace Lumen::Render::DX11On12
+namespace Lumen::Render::D2D
 {
     static bool IsDXGIPresentHooked_ = false;
     static bool IsDXGIResizeBuffersHooked_ = false;

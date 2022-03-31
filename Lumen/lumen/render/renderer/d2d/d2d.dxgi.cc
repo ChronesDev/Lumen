@@ -5,7 +5,7 @@
 
 #include <indxs>
 
-namespace Lumen::Render::DX11On12
+namespace Lumen::Render::D2D
 {
     typedef long(__fastcall* DXGIPresentFunc)(IDXGISwapChain3* SwapChainPtr, uint SyncInterval, uint Flags);
     typedef HRESULT(__fastcall* DXGIResizeBuffersFunc)(IDXGISwapChain* SwapChainPtr, uint BufferCount, uint Width,
