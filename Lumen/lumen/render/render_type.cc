@@ -10,7 +10,7 @@ namespace Lumen::Render
 {
     enum class RenderType
     {
-        DX11On12
+        D2D
     };
 }
 

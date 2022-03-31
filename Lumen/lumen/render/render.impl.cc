@@ -16,8 +16,8 @@ namespace Lumen::Render
         RenderType_ = type;
         switch (RenderType_)
         {
-        case RenderType::DX11On12:
-            DX11On12::Init();
+        case RenderType::D2D:
+            D2D::Init();
             break;
         default:
             INDEX_THROW("Unsupported RenderType.");
@@ -32,8 +32,8 @@ namespace Lumen::Render
 
         switch (RenderType_)
         {
-        case RenderType::DX11On12:
-            DX11On12::Deinit();
+        case RenderType::D2D:
+            D2D::Deinit();
             break;
         default:
             INDEX_THROW("Unknown RenderType.");
