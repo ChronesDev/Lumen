@@ -5,7 +5,7 @@
 
 #include <indxs>
 
-namespace Lumen::Render::DX11On12
+namespace Lumen::Render::D2D
 {
     typedef void (*D3D12ExecuteCommandListsFunc)(
         ID3D12CommandQueue* CommandQueuePtr, uint CommandListsCount, ID3D12CommandList* CommandListPtr);

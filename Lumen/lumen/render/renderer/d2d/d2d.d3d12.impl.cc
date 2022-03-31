@@ -1,12 +1,10 @@
-#pragma comment(lib, "d3d12.lib")
-
 #include <lumen/ext/kiero/kiero.cc>
 
-#include "dx11on12.d3d12.cc"
+#include "d2d.d3d12.cc"
 
 #include <indxs>
 
-namespace Lumen::Render::DX11On12
+namespace Lumen::Render::D2D
 {
     static bool IsIsD3D12ExecuteCommandListsHooked_ = false;
     [[maybe_unused]] fun IsD3D12ExecuteCommandListsHooked()->bool { return IsIsD3D12ExecuteCommandListsHooked_; }
