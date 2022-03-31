@@ -17,6 +17,11 @@ namespace Lumen::Signature
     global string GetGamma = "48 83 EC 28 80 B9 81 12 00 00 00 48 8D 54 24 30 48 8B 01 74 35 41 B8 15";
 
     global string GetWorldTime = "48 8B 81 50 02 00 00 48 85 C0 74 07 8B 80 50";
+
+    /*? 1.18.12
+     ** Minecraft.Windows.exe+1713CC7 - F3 0F10 40 14         - movss xmm0,[rax+14]
+     ** begins at: Minecraft.Windows.exe+1713BD0
+     */
 }
 
 #include <indxe>
