@@ -48,6 +48,9 @@ cmake-build-release-clang/
 cmake-build-debug-gcc/
 cmake-build-release-gcc/
 
+# Vcx Build Debugging
+vcxproj-build/
+
 build/
 out/
 
