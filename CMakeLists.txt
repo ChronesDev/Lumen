@@ -5,7 +5,7 @@ project(Lumen)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_GENERATOR_PLATFORM x64)
 
-add_library(Lumen SHARED "Lumen/lumen.cc" Lumen/lumen/render/renderer/d2d/d2d.resources.cc Lumen/lumen/render/renderer/d2d/d2d.resources.impl.cc Lumen/lumen/render/renderer/d2d/d2d.framecontext.cc Lumen/lumen/render/renderer/d2d/d2d.helper.cc Lumen/lumen/render/renderer/d2d/d2d.link.impl.cc)
+add_library(Lumen SHARED "Lumen/lumen.cc")
 
 add_subdirectory(Index)
 add_subdirectory(Lib)
