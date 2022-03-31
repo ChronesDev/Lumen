@@ -11,6 +11,7 @@ namespace Lumen::Render
 {
     fun Init(RenderType type)->void;
     fun Deinit()->void;
+    fun TryDeinit()->void;
 }
 
 #include <indxe>

@@ -7,7 +7,7 @@ namespace Lumen::Render
     static bool Initialized_ = false;
     fun HasInit()->bool { return Initialized_; }
 
-    static RenderType RenderType_ = { };
+    static RenderType RenderType_ = {};
 
     fun Init(RenderType type)->void
     {
@@ -40,6 +40,11 @@ namespace Lumen::Render
         }
 
         Initialized_ = false;
+    }
+
+    fun TryDeinit()->void
+    {
+        if (Initialized_) Deinit();
     }
 }
 

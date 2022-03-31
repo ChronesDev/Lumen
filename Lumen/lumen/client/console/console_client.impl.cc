@@ -15,6 +15,8 @@
 #include <lumen/module/modules/module_timechanger.cc>
 #include <lumen/module/modules/module_zoom.cc>
 
+#include <lumen/render/render.cc>
+
 #include "terminal/terminal_parser.cc"
 
 #include <indxs>
@@ -175,8 +177,20 @@ namespace Lumen::Terminal
 
             Log("Initializing modules");
             Modules::Init();
+
+            Log("Initializing Renderer");
+            Lumen::Render::Init(Render::RenderType::D2D);
         }
-        catch (std::exception ex)
+        catch (std::runtime_error& ex)
+        {
+            Log.Fail(fg::black, bgB::red, "There was an error while trying to initialize:", fgB::red, bg::reset,
+                " \n\t", ex.what());
+            Log.NewLine();
+            Log("Ejecting in 9 seconds");
+            Time.Delay(TimeSpan::FromSec(9));
+            INDEX_THROW("Eject.");
+        }
+        catch (std::exception& ex)
         {
             Log.Fail(fg::black, bgB::red, "There was an error while trying to initialize:", fgB::red, bg::reset,
                 " \n\t", ex.what());
@@ -190,6 +204,8 @@ namespace Lumen::Terminal
     fun PostConsoleDeinit_()->void
     {
         using namespace rang;
+
+        Lumen::Render::TryDeinit();
 
         Modules::Deinit();
         Input::Deinit();

@@ -1,3 +1,5 @@
+#include <kiero2>
+
 #include "d2d.cc"
 
 #include <indxs>
@@ -28,6 +30,9 @@ namespace Lumen::Render::D2D
     {
         if (Initialized_) INDEX_THROW("Already initialized.");
 
+        if (kiero::init(kiero::RenderType::D3D12) != kiero::Status::Success)
+            INDEX_THROW("Kiero Failed.");
+
         RenderInit_();
 
         Initialized_ = true;
@@ -37,6 +42,8 @@ namespace Lumen::Render::D2D
         if (!Initialized_) INDEX_THROW("Already deinitialized.");
 
         RenderDeinit_();
+
+        kiero::shutdown();
 
         Initialized_ = false;
     }
@@ -279,6 +286,17 @@ namespace Lumen::Render::D2D
 
         ThrowIfFailed(dc->EndDraw());
         dc->BeginDraw();
+
+        {
+            var r = D2D1::RectF(10, 10, 40, 40);
+            var c = D2D1::ColorF(D2D1::ColorF::LightSlateGray);
+            com_ptr<ID2D1SolidColorBrush> b;
+            dc->CreateSolidColorBrush(c, b.put());
+            dc->DrawRectangle(r, b.get());
+
+            ThrowIfFailed(dc->EndDraw());
+            dc->BeginDraw();
+        }
 
         // End Render
         ThrowIfFailed(dc->EndDraw());
