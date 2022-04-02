@@ -1,7 +1,5 @@
 #pragma once
 
-#include <lumen/log/log.cc>
-
 #include "lui_resource.cc"
 
 #include <indxs>

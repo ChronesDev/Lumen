@@ -2,8 +2,6 @@
 
 #include <lumen/ui/lui/context/context/lui_context.cc>
 
-#include <lumen/log/log.cc>
-
 #include <indxs>
 
 namespace Lumen::LUI
