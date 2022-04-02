@@ -11,7 +11,7 @@ namespace Lumen::LUI
         virtual ~ColorBrushResource() = default;
 
     public:
-        fun GetHasResource() const->bool override { return Resource_.HasValue && Resource_.has_value(); }
+        fun GetHasResource() const->bool override { return Resource_.HasValue && Resource_; }
 
     public:
         fun OnUpdate()->void override
