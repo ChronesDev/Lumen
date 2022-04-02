@@ -83,11 +83,23 @@ namespace Lumen::LUI
     public:
         fun Update(LUIContext* l)->void
         {
+            if (!l)
+            {
+                Release();
+                return;
+            }
             LContext = l;
-            Update();
+            OnUpdate();
         }
-        fun Update()->void { OnUpdate(); }
-        fun Release()->void { OnRelease(); }
+        fun Update()->void
+        {
+            if (LContext_) OnUpdate();
+        }
+        fun Release()->void
+        {
+            LContext = nullptr;
+            OnRelease();
+        }
 
     public:
         virtual fun OnUpdate()->void = 0;

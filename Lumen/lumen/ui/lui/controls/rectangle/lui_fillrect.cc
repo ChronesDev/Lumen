@@ -11,7 +11,7 @@ namespace Lumen::LUI
 {
     INDEX_UI_Declare(FillRect);
 
-    struct FillRect : virtual LUIElement
+    struct FillRect : virtual LUIRenderElement
     {
         INDEX_UI_UseMapper(FillRectMapper);
 

@@ -17,6 +17,9 @@
 
 #include <lumen/render/render.cc>
 
+// TODO: !!!
+#include <lumen/ui/lu/lu.cc>
+
 #include "terminal/terminal_parser.cc"
 
 #include <indxs>
@@ -131,7 +134,7 @@ namespace Lumen::Terminal
             Time.Delay(TimeSpan::FromSec(0.3));
             Log.Custom(fgB::magenta, "It looks like Lumen does not support the running Minecraft version.");
 
-            Debug.Write(fgB::yellow, " Do you still want to continue? ", fg::gray, "(", fgB::green, "Y", fg::gray, "/",
+            Console.Write(fgB::yellow, " Do you still want to continue? ", fg::gray, "(", fgB::green, "Y", fg::gray, "/",
                 fgB::red, "N", fg::gray, ") ", fgB::cyan, "-> ");
 
             var key = getchar();
@@ -139,13 +142,13 @@ namespace Lumen::Terminal
 
             if (key == 'y' || key == 'Y')
             {
-                // Debug.WriteLine(fg::black, bgB::green, "Y", fg::reset, bg::reset);
+                // Console.WriteLine(fg::black, bgB::green, "Y", fg::reset, bg::reset);
                 // Log.NewLine();
                 return;
             }
             else
             {
-                // Debug.WriteLine(fg::black, bgB::red, "N", fg::reset, bg::reset);
+                // Console.WriteLine(fg::black, bgB::red, "N", fg::reset, bg::reset);
                 // Log.NewLine();
                 Log("Ejecting in 9 seconds");
                 Time.Delay(TimeSpan::FromSec(9));
@@ -180,6 +183,8 @@ namespace Lumen::Terminal
 
             Log("Initializing Renderer");
             Lumen::Render::Init(Render::RenderType::D2D);
+
+            UI::Init();
         }
         catch (std::runtime_error& ex)
         {

@@ -14,8 +14,39 @@ namespace Lumen::LUI
         winrt::com_ptr<LUIDrawable> DrawContext_;
 
     public:
+        fun SetDrawContext(const winrt::com_ptr<LUIDrawable>& value)
+        {
+            if (DrawContext_ != value)
+            {
+                DrawContext_ = value;
+                if (value.get()) TriggerResourcesUpdate();
+                else TriggerResourcesRelease();
+            }
+        }
+
+    public:
         fun GetDrawContext() const->LUIDrawable* { return DrawContext_.get(); }
         INDEX_Property(get = GetDrawContext) LUIDrawable* dw;
+
+    public:
+        fun TriggerResourcesUpdate()->void
+        {
+            for (var& v : ResourcesUpdate)
+            {
+                if (!v.first) continue;
+                if (!v.second) continue;
+                v.second();
+            }
+        }
+        fun TriggerResourcesRelease()->void
+        {
+            for (var& v : ResourcesRelease)
+            {
+                if (!v.first) continue;
+                if (!v.second) continue;
+                v.second();
+            }
+        }
 
     public:
         std::list<std::pair<IPtr<UIElement>, std::function<void()>>> ResourcesUpdate;

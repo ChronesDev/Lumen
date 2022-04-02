@@ -62,9 +62,6 @@ namespace Lumen::Render::D2D
 
     static int SkipFrames = 0;
 
-    static uint Width = 0;
-    static uint Height = 0;
-
     static uint CurrentBufferIndex = 0;
 
     static com_ptr<ID2D1Bitmap> BackBuffer;

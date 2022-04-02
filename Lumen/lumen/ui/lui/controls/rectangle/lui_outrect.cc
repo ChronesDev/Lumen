@@ -11,7 +11,7 @@ namespace Lumen::LUI
 {
     INDEX_UI_Declare(OutRect);
 
-    struct OutRect : virtual LUIElement
+    struct OutRect : virtual LUIRenderElement
     {
         INDEX_UI_UseMapper(OutRectMapper);
 

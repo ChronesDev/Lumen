@@ -19,6 +19,9 @@ namespace Lumen::Render::D2D
     global Event<void()> DXRenderCompleted;
     global Event<void()> DXRenderInit;
     global Event<void()> DXRelease;
+
+    global uint Width = 0;
+    global uint Height = 0;
 }
 
 #include <indxe>

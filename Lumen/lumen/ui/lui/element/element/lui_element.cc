@@ -2,6 +2,8 @@
 
 #include <lumen/ui/lui/context/context/lui_context.cc>
 
+#include <lumen/log/log.cc>
+
 #include <indxs>
 
 namespace Lumen::LUI
@@ -18,6 +20,7 @@ namespace Lumen::LUI
     protected:
         void LUIElement_OnAttachedToUIRoot_(IPtr<IUIRoot> root)
         {
+            Log("LUIElement_OnAttachedToUIRoot_ Attached.");
             auto ptr = dynamic_cast<LUIContext*>(root.Ptr);
             if (ptr)
             {
@@ -28,6 +31,7 @@ namespace Lumen::LUI
         }
         void LUIElement_OnDetachedFromUIRoot_()
         {
+            Log("LUIElement_OnAttachedToUIRoot_ Detached.");
             if (LContext_) { LContext_Unregister_(LContext_); }
             LContext_ = nullptr;
 
@@ -64,24 +68,6 @@ namespace Lumen::LUI
     protected:
         virtual void OnResourcesUpdate() = 0;
         virtual void OnResourcesRelease() = 0;
-
-    protected:
-        void OnRender() override
-        {
-            if (!lc) return;
-            if (LUIDrawable* d = lc->dw; d) OnLRender(d);
-        }
-
-    public:
-        void OnPostRender() override
-        {
-            if (!lc) return;
-            if (LUIDrawable* d = lc->dw; d) OnLPostRender(d);
-        }
-
-    protected:
-        virtual void OnLRender(LUIDrawable* d) {};
-        virtual void OnLPostRender(LUIDrawable* d) {};
     };
 }
 
