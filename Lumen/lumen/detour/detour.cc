@@ -31,6 +31,10 @@ namespace Lumen::Detour
     typedef int (*GetWorldTimeFunc)(void* that);
     global GetWorldTimeFunc GetWorldTimeOriginal;
     global SimpleDetour GetWorldTimeDetour;
+
+    typedef float (*GetMouseSensitivityFunc)(void* that, UInt64 a1);
+    global GetMouseSensitivityFunc GetMouseSensitivityOriginal;
+    global SimpleDetour GetMouseSensitivityDetour;
 }
 
 #include <indxe>

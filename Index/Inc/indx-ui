@@ -1,0 +1,6 @@
+#include <index_ui>
+
+namespace Lumen::LUI
+{
+    using namespace Index::UI;
+}

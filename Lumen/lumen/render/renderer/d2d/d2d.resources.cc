@@ -31,9 +31,9 @@ namespace Lumen::Render::D2D::Res
     global com_ptr<ID3D11On12Device> D3D11On12Device = nullptr;
     global List<com_ptr<ID3D11Resource>> D3D11Resources;
 
-    global com_ptr<ID2D1Factory3> D2D1Factory = nullptr;
-    global com_ptr<ID2D1Device1> D2D1Device = nullptr;
-    global com_ptr<ID2D1DeviceContext> D2D1DeviceContext = nullptr;
+    global com_ptr<ID2D1Factory7> D2D1Factory = nullptr;
+    global com_ptr<ID2D1Device6> D2D1Device = nullptr;
+    global com_ptr<ID2D1DeviceContext6> D2D1DeviceContext = nullptr;
     global List<com_ptr<ID2D1RenderTarget>> D2D1RenderTargets;
     global List<com_ptr<ID2D1Bitmap1>> D2D1Bitmaps;
 

@@ -8,8 +8,8 @@
 
 static bool IsDisabling_ = false;
 
-fun OnTimeChangerDisabled_()->void;
-fun OnTimeChangerCustomTimeChanged_()->void;
+static fun OnTimeChangerDisabled_()->void;
+static fun OnTimeChangerCustomTimeChanged_()->void;
 
 namespace Lumen::Modules
 {
@@ -54,7 +54,7 @@ namespace Lumen::Modules
     fun Night::LoadConfig(nlohmann::json& j)->void { SetState(j["IsEnabled"]); }
 }
 
-fun OnTimeChangerDisabled_()->void
+static fun OnTimeChangerDisabled_()->void
 {
     using namespace Lumen;
     using namespace Lumen::Modules;
@@ -65,7 +65,7 @@ fun OnTimeChangerDisabled_()->void
     NightModule->Disable();
 }
 
-fun OnTimeChangerCustomTimeChanged_()->void
+static fun OnTimeChangerCustomTimeChanged_()->void
 {
     using namespace Lumen;
     using namespace Lumen::Modules;

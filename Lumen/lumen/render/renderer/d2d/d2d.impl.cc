@@ -200,7 +200,7 @@ namespace Lumen::Render::D2D
         {
             D2D1_DEVICE_CONTEXT_OPTIONS device_options = D2D1_DEVICE_CONTEXT_OPTIONS_NONE;
             D2D1_FACTORY_OPTIONS factory_options {};
-            ThrowIfFailed(D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, __uuidof(ID2D1Factory3),
+            ThrowIfFailed(D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, __uuidof(ID2D1Factory7),
                 &factory_options, res::D2D1Factory.put_void()));
 
             ThrowIfFailed(res::D2D1Factory->CreateDevice(res::DXGIDevice.get(), res::D2D1Device.put()));

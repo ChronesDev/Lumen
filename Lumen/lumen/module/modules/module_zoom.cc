@@ -50,6 +50,8 @@ namespace Lumen::Modules
 
         float InFactor = 1;
         float OutFactor = 1;
+
+        Nullable<float> SensitivityTo = Null;
     };
 
     global IPtr<Zoom> ZoomModule;

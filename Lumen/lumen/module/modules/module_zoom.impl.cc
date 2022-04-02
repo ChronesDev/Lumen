@@ -9,6 +9,7 @@
 
 static fun OnGetFov_(void* that, float f, bool b)->float;
 static fun OnKeyEvent_(Lumen::Key key, Lumen::KeyState state, bool& handled, bool& cancel)->void;
+static fun OnGetMouseSensitivity_(void* that, UInt64 a1)->float;
 
 static List<std::pair<string, IPtr<IEasing>>> Easings_ = {
     { "Linear", INew<LinearEasing>() },
@@ -26,9 +27,13 @@ namespace Lumen::Modules
         Input::KeyEvent += OnKeyEvent_;
         Log("(Zoom) Registered to KeyEvent");
 
-        var result = Mem.FindSignature(Signature::GetFov);
-        Detour::GetFovDetour.Hook(result, Detour::GetFovOriginal, OnGetFov_);
+        var result1 = Mem.FindSignature(Signature::GetFov);
+        Detour::GetFovDetour.Hook(result1, Detour::GetFovOriginal, OnGetFov_);
         Log("(Zoom) Hooked GetFovDetour");
+
+        var result2 = Mem.FindSignature(Signature::GetMouseSensitivity);
+        Detour::GetMouseSensitivityDetour.Hook(result2, Detour::GetMouseSensitivityOriginal, OnGetMouseSensitivity_);
+        Log("(Zoom) Hooked GetMouseSensitivityDetour");
     }
 
     fun Zoom::OnDeinit()->void
@@ -118,6 +123,18 @@ namespace Lumen::Modules
                     Log.Fail("Wrong argument.");
                 }
                 Log.Custom(fgB::blue, "-> ", OutFactor);
+            }
+
+            elif (args[0] == "sensitivity")
+            {
+                if (args.Length != 1)
+                {
+                    Log.Fail("Wrong amount of arguments.");
+                    Log.Custom(fgB::green, "... sensitivity", "\t\t", fg::blue, "");
+                    return;
+                }
+                Log.Custom(
+                    fgB::blue, "-> ", SensitivityTo.HasValue ? std::to_string(SensitivityTo.Value) : (string) "none");
             }
         }
     }
@@ -247,6 +264,26 @@ namespace Lumen::Modules
                 }
                 Log.Custom(fgB::blue, "-> ", OutFactor);
             }
+
+            elif (args[0] == "sensitivity")
+            {
+                if (args.Length != 2)
+                {
+                    Log.Fail("Wrong amount of arguments.");
+                    Log.Custom(fgB::green, "... sensitivity (value/\"none\")", "\t\t", fg::blue, "");
+                    return;
+                }
+                try
+                {
+                    if (args[1] == "none") SensitivityTo = Null;
+                    else
+                        SensitivityTo = Limit<float>((float)std::stod(args[1]), 0, 2);
+                }
+                catch (...)
+                {
+                    Log.Fail("Wrong argument.");
+                }
+            }
         }
     }
 
@@ -259,6 +296,7 @@ namespace Lumen::Modules
         j["Easing"] = EasingName;
         j["InFactor"] = InFactor;
         j["OutFactor"] = OutFactor;
+        j["SensitivityTo"] = Limit<float>(SensitivityTo.ValueOr(0), 0, 2);
     }
     fun Zoom::LoadConfig(nlohmann::json& j)->void
     {
@@ -268,6 +306,9 @@ namespace Lumen::Modules
         BindZoom = Input::FindKeyByKeyName((std::string)j["BindZoom"]);
         InFactor = j["InFactor"];
         OutFactor = j["OutFactor"];
+
+        SensitivityTo = Limit<float>(j["SensitivityTo"], 0, 2);
+        if (SensitivityTo.Value == 0) SensitivityTo = Null;
 
         // Easing
         {
@@ -285,7 +326,7 @@ namespace Lumen::Modules
     }
 }
 
-fun OnGetFov_(void* that, float f, bool b)->float
+static fun OnGetFov_(void* that, float f, bool b)->float
 {
     using namespace Lumen;
     using namespace Lumen::Modules;
@@ -332,7 +373,7 @@ fun OnGetFov_(void* that, float f, bool b)->float
     return fov;
 }
 
-fun OnKeyEvent_(Lumen::Key key, Lumen::KeyState state, bool& handled, bool& cancel)->void
+static fun OnKeyEvent_(Lumen::Key key, Lumen::KeyState state, bool& handled, bool& cancel)->void
 {
     using namespace Lumen;
     using namespace Lumen::Modules;
@@ -355,6 +396,28 @@ fun OnKeyEvent_(Lumen::Key key, Lumen::KeyState state, bool& handled, bool& canc
     }
 
     handled = true;
+}
+
+static fun OnGetMouseSensitivity_(void* that, UInt64 a1)->float
+{
+    using namespace Lumen;
+    using namespace Lumen::Modules;
+
+    if (ZoomModule.IsNull) INDEX_THROW("ZoomModule was null.");
+    if (ZoomModule->IsDisabled) return Detour::GetMouseSensitivityOriginal(that, a1);
+
+    var sens = Detour::GetMouseSensitivityOriginal(that, a1);
+    if (!ZoomModule->SensitivityTo.HasValue) return sens;
+
+    if (ZoomModule->IsZooming)
+    {
+        var& progress = ZoomModule->ZoomProgress;
+        var to = ZoomModule->SensitivityTo.Value;
+
+        return Lerp<float>(sens, to, (float)ZoomModule->Easing->operator()(progress));
+    }
+    else
+        return sens;
 }
 
 #include <indxe>
