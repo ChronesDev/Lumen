@@ -62,8 +62,6 @@ namespace Lumen::Render::D2D
 
     static int SkipFrames = 0;
 
-    static uint CurrentBufferIndex = 0;
-
     static com_ptr<ID2D1Bitmap> BackBuffer;
     static com_ptr<ID2D1Effect> ColorEffect;
 
@@ -302,13 +300,13 @@ namespace Lumen::Render::D2D
         dc->SetTarget(res::D2D1Bitmaps[i].get());
         dc->BeginDraw();
 
-        {
-            if (!ColorEffect) dc->CreateEffect(CLSID_D2D1Grayscale, ColorEffect.put());
-
-            CopyBitmap(dc, res::D2D1Bitmaps[i], BackBuffer);
-            ColorEffect->SetInput(0, BackBuffer.get());
-            dc->DrawImage(ColorEffect.get());
-        }
+//        {
+//            if (!ColorEffect) dc->CreateEffect(CLSID_D2D1Grayscale, ColorEffect.put());
+//
+//            CopyBitmap(dc, res::D2D1Bitmaps[i], BackBuffer);
+//            ColorEffect->SetInput(0, BackBuffer.get());
+//            dc->DrawImage(ColorEffect.get());
+//        }
 
         // DXRender
         DXRender.Invoke();

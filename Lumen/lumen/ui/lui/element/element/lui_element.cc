@@ -18,7 +18,6 @@ namespace Lumen::LUI
     protected:
         void LUIElement_OnAttachedToUIRoot_(IPtr<IUIRoot> root)
         {
-            Log("LUIElement_OnAttachedToUIRoot_ Attached.");
             auto ptr = dynamic_cast<LUIContext*>(root.Ptr);
             if (ptr)
             {
@@ -29,7 +28,6 @@ namespace Lumen::LUI
         }
         void LUIElement_OnDetachedFromUIRoot_()
         {
-            Log("LUIElement_OnAttachedToUIRoot_ Detached.");
             if (LContext_) { LContext_Unregister_(LContext_); }
             LContext_ = nullptr;
 

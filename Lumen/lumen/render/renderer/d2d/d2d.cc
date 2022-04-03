@@ -22,6 +22,8 @@ namespace Lumen::Render::D2D
 
     global uint Width = 0;
     global uint Height = 0;
+
+    global uint CurrentBufferIndex = 0;
 }
 
 #include <indxe>

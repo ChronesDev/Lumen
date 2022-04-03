@@ -30,17 +30,23 @@ namespace Lumen::UI
 
     fun OnRender()->void
     {
+        var now = Time.Now;
+
         LContext->SetDrawContext(Render::D2D::Res::D2D1DeviceContext);
 
         FrameCounter.Next();
         LContext->Compute(FrameCounter.Frame, { 0.f, 0.f, (float)Render::D2D::Width, (float)Render::D2D::Height });
         LContext->Render();
         LContext->Update();
+
+        var lasted = (Time.Now - now).Micro;
+        Console.Log("Time Lasted: ", lasted);
     }
 
     fun OnInitRender()->void { }
 
-    fun OnRelease()->void { LContext->SetDrawContext({}); }
+    fun OnRelease()->void { LContext->SetDrawContext(nullptr);
+    }
 }
 
 #include <indxe-ui>
