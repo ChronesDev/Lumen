@@ -37,7 +37,8 @@ namespace Lumen::LUI
         Color Outline;
 
     public:
-        IPtr<UIElement> Make() override {
+        IPtr<UIElement> Make() override
+        {
             IPtr<OutRect> e_ref = INew<OutRect>();
             OutRect& e = e_ref.Value;
 
@@ -47,10 +48,7 @@ namespace Lumen::LUI
             return e_ref.DynamicAs<UIElement>();
         }
 
-        template <class T> void Impl_OutRect_(T& e)
-        {
-            e.Outline.Value = Outline;
-        }
+        template <class T> void Impl_OutRect_(T& e) { e.Outline.Value = Outline; }
     };
 }
 
