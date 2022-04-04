@@ -9,46 +9,26 @@
 
 namespace Lumen::LUI
 {
+    struct LUIInputElement;
+
     struct LUIContext : virtual UIInputContext<LUIInputDescriptor>
     {
+        using TKey = LUIInputDescriptor::TKey;
+        using TKeyState = LUIInputDescriptor::TKeyState;
+
     protected:
         winrt::com_ptr<LUIDrawable> DrawContext_;
 
     public:
-        fun SetDrawContext(const winrt::com_ptr<LUIDrawable>& value)
-        {
-            if (DrawContext_ != value)
-            {
-                DrawContext_ = value;
-                if (value) ResourcesUpdate();
-                else
-                    ResourcesRelease();
-            }
-        }
+        fun SetDrawContext(const winrt::com_ptr<LUIDrawable>& value)->void;
 
     public:
         fun GetDrawContext() const->LUIDrawable* { return DrawContext_.get(); }
         INDEX_Property(get = GetDrawContext) LUIDrawable* dw;
 
     protected:
-        fun TriggerResourcesUpdate()->void
-        {
-            for (var& v : ResourcesUpdateSubscribers)
-            {
-                if (!v.first) continue;
-                if (!v.second) continue;
-                v.second();
-            }
-        }
-        fun TriggerResourcesRelease()->void
-        {
-            for (var& v : ResourcesReleaseSubscribers)
-            {
-                if (!v.first) continue;
-                if (!v.second) continue;
-                v.second();
-            }
-        }
+        fun TriggerResourcesUpdate()->void;
+        fun TriggerResourcesRelease()->void;
 
     public:
         std::list<std::pair<IPtr<UIElement>, std::function<void()>>> ResourcesUpdateSubscribers;
@@ -97,47 +77,61 @@ namespace Lumen::LUI
         INDEX_Property(get = GetBlurBuffer) ID2D1Image* BlurBuffer;
 
     public:
-        void Render() override
-        {
-            if (dw == nullptr) return;
-
-            namespace d2d = ::Lumen::Render::D2D;
-
-            if (DrawContext_ == nullptr) INDEX_THROW("DrawContext_ (dw) was nullptr.");
-
-            d2d::CopyBitmap(
-                DrawContext_.get(), d2d::Res::D2D1Bitmaps[d2d::CurrentBufferIndex], BackBuffer_);
-
-            if (BlurEffect_ == nullptr)
-            {
-                d2d::ThrowIfFailed(DrawContext_->CreateEffect(CLSID_D2D1GaussianBlur, BlurEffect_.put()));
-                BlurEffect_->SetValue(D2D1_GAUSSIANBLUR_PROP_STANDARD_DEVIATION, 10.0f);
-                BlurEffect_->SetValue(D2D1_GAUSSIANBLUR_PROP_OPTIMIZATION, D2D1_GAUSSIANBLUR_OPTIMIZATION_SPEED);
-                BlurEffect_->SetValue(D2D1_GAUSSIANBLUR_PROP_BORDER_MODE, D2D1_BORDER_MODE_HARD);
-            }
-            BlurEffect_->SetInput(0, BackBuffer_.get());
-
-            d2d::MakeBlurBufferArgs args {
-                .BackBuffer = BackBuffer_, .BlurBuffer = BlurBuffer_, .BlurEffect = &BlurEffect_, .Sigma = 10.0f
-            };
-            d2d::MakeBlurBuffer(DrawContext_.get(), args);
-
-            UIRoot::Render();
-        }
+        fun Render()->void override;
 
     public:
-        fun ResourcesUpdate()->void { TriggerResourcesUpdate(); }
+        fun ResourcesUpdate()->void;
+        fun ResourcesRelease()->void;
 
-        fun ResourcesRelease()->void
+    protected:
+        LUIInputElement* LInputElement_ {};
+        bool HasLInputElement_ = false;
+
+    public:
+        fun GetLInputElement()->LUIInputElement*
         {
-            DrawContext_ = nullptr;
-
-            BackBuffer_ = nullptr;
-            BlurBuffer_ = nullptr;
-            BlurEffect_ = nullptr;
-
-            TriggerResourcesRelease();
+            if (!LInputElement_) INDEX_THROW("LInputElement_ was nullptr.");
+            return LInputElement_;
         }
+        INDEX_Property(get = GetLInputElement) LUIInputElement* LInputElement;
+
+        fun GetHasLInputElement() const->bool { return HasLInputElement_; }
+        INDEX_Property(get = GetHasLInputElement) bool HasLInputElement;
+
+    protected:
+        fun OnElementFocused_(const IPtr<UIElement>& e)->void override;
+        fun OnElementUnfocused_()->void override;
+
+    public:
+        Vec2F MPV_ {};
+        std::array<TKeyState, 255> KeyMap_;
+
+    public:
+        fun GetMPV() const->const Vec2F& { return MPV_; }
+        INDEX_Property(get = GetMPV) const Vec2F& MPV;
+
+        fun IsMPVIn(Rect r) const->bool { return r.IsPointInside(MPV_); };
+
+    public:
+        fun IsKeyPressed(TKey key) const->bool { return KeyMap_[(int)key] == TKeyState::Pressed; }
+        fun IsKeyReleased(TKey key) const->bool { return KeyMap_[(int)key] == TKeyState::Released; }
+        fun GetKeyState(TKey key) const->TKeyState { return KeyMap_[(int)key]; }
+
+    protected:
+        WPtr<LUIInputElement> LInputElement_LastHovered_;
+        // WPtr<LUIInputElement> LInputElement_CapturesInput_;
+
+    protected:
+        bool HasCapturedInput_ = false;
+
+    public:
+        fun GetHasCapturedInput() const->bool { return HasCapturedInput_; }
+        INDEX_Property(get = GetHasCapturedInput) bool HasCapturedInput;
+
+    public:
+        fun TriggerMouseMove(Vec2F to)->void;
+        fun TriggerKeyPressed(TKey key)->void;
+        fun TriggerKeyReleased(TKey key)->void;
     };
 }
 
