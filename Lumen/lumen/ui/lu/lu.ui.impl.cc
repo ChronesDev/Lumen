@@ -44,97 +44,11 @@ namespace Lumen::UI
                 m Fill = Colors::Aqua;
             };
 
-            m Name = "Stack1";
-            m Alignment = Align::LeftTop;
-            m Margin = { 20, 20 };
-            m Width = 100;
-
-            sub FillRect mapn {
-                m Height = 40;
-                m Fill = Color::RGBA(97, 255, 69, 100);
-            };
-            sub HStack mapn {
-                sub BlurRect mapn {
-                    m Width = 50;
-                    m MinHeight = 50;
-                    m Padding = { 10 };
-                };
-                sub BlurRect mapn {
-                    m Width = 50;
-                    m MinHeight = 50;
-                };
-            };
-            sub BlurRect mapn {
+            sub SimpleButton mapn {
                 m Height = 30;
-            };
-            sub FillRect mapn {
-                m Name = "X";
-                m MaxSize = { AutoF, 50 };
-                m Margin = { 5, 5 };
-                m Padding = { 10, 0 };
-                m Fill = Colors::Aqua;
-            };
-
-            m Name = "Stack1";
-            m Alignment = Align::LeftTop;
-            m Margin = { 20, 20 };
-            m Width = 100;
-
-            sub FillRect mapn {
-                m Height = 40;
-                m Fill = Color::RGBA(97, 255, 69, 100);
-            };
-            sub HStack mapn {
-                sub BlurRect mapn {
-                    m Width = 50;
-                    m MinHeight = 50;
-                    m Padding = { 10 };
+                m Clicked += [](auto* e) {
+                    Console.Log("Clicked!");
                 };
-                sub BlurRect mapn {
-                    m Width = 50;
-                    m MinHeight = 50;
-                };
-            };
-            sub BlurRect mapn {
-                m Height = 30;
-            };
-            sub FillRect mapn {
-                m Name = "X";
-                m MaxSize = { AutoF, 50 };
-                m Margin = { 5, 5 };
-                m Padding = { 10, 0 };
-                m Fill = Colors::Aqua;
-            };
-
-            m Name = "Stack1";
-            m Alignment = Align::LeftTop;
-            m Margin = { 20, 20 };
-            m Width = 100;
-
-            sub FillRect mapn {
-                m Height = 40;
-                m Fill = Color::RGBA(97, 255, 69, 100);
-            };
-            sub HStack mapn {
-                sub BlurRect mapn {
-                    m Width = 50;
-                    m MinHeight = 50;
-                    m Padding = { 10 };
-                };
-                sub BlurRect mapn {
-                    m Width = 50;
-                    m MinHeight = 50;
-                };
-            };
-            sub BlurRect mapn {
-                m Height = 30;
-            };
-            sub FillRect mapn {
-                m Name = "X";
-                m MaxSize = { AutoF, 50 };
-                m Margin = { 5, 5 };
-                m Padding = { 10, 0 };
-                m Fill = Colors::Aqua;
             };
         };
         // clang-format enable
