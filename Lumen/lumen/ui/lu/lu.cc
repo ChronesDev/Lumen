@@ -14,6 +14,9 @@ namespace Lumen::UI
     fun Init()->void;
     fun Deinit()->void;
 
+    fun InitInput()->void;
+    fun DeinitInput()->void;
+
     fun OnInitRender()->void;
     fun OnRender()->void;
     fun OnRelease()->void;
