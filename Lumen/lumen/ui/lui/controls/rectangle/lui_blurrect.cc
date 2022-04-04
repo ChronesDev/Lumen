@@ -18,20 +18,21 @@ namespace Lumen::LUI
     protected:
         void OnLRender(LUIDrawable* d) override
         {
-            d->PushAxisAlignedClip(ToD2DRectF(ComputedLayout), { });
+            d->PushAxisAlignedClip(ToD2DRectF(ComputedLayout), {});
             d->DrawImage(lc->BlurBuffer);
             d->PopAxisAlignedClip();
         }
 
     protected:
-        fun OnResourcesUpdate()->void override {  }
-        fun OnResourcesRelease()->void override {  }
+        fun OnResourcesUpdate()->void override { }
+        fun OnResourcesRelease()->void override { }
     };
 
     struct BlurRectMapper : virtual UIElementMapper
     {
     public:
-        IPtr<UIElement> Make() override {
+        IPtr<UIElement> Make() override
+        {
             IPtr<BlurRect> e_ref = INew<BlurRect>();
             BlurRect& e = e_ref.Value;
 
