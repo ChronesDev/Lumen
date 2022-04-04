@@ -8,8 +8,8 @@
 
 namespace Lumen::UI
 {
-    static IPtr<LUIContext> LContext;
-    static UIFrameCounter FrameCounter;
+    IPtr<LUIContext> LContext;
+    UIFrameCounter FrameCounter;
 
     fun Init()->void
     {
@@ -20,12 +20,16 @@ namespace Lumen::UI
         Render::D2D::DXRelease += OnRelease;
 
         LContext->AttachRootElement(GetUI());
+
+        InitInput();
     }
     fun Deinit()->void
     {
         Render::D2D::DXRender -= OnRender;
         Render::D2D::DXRenderInit -= OnInitRender;
         Render::D2D::DXRelease -= OnRelease;
+
+        DeinitInput();
     }
 
     fun OnRender()->void
@@ -40,7 +44,7 @@ namespace Lumen::UI
         LContext->Update();
 
         var lasted = (Time.Now - now).Micro;
-        Console.Log("Time Lasted: ", lasted);
+//        Console.Log("Time Lasted: ", lasted);
     }
 
     fun OnInitRender()->void { }
