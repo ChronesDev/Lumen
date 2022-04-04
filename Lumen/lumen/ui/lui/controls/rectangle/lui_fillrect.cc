@@ -36,7 +36,8 @@ namespace Lumen::LUI
         Color Fill;
 
     public:
-        IPtr<UIElement> Make() override {
+        IPtr<UIElement> Make() override
+        {
             IPtr<FillRect> e_ref = INew<FillRect>();
             FillRect& e = e_ref.Value;
 
@@ -46,10 +47,7 @@ namespace Lumen::LUI
             return e_ref.DynamicAs<UIElement>();
         }
 
-        template <class T> void Impl_FillRect_(T& e)
-        {
-            e.Fill.Value = Fill;
-        }
+        template <class T> void Impl_FillRect_(T& e) { e.Fill.Value = Fill; }
     };
 }
 
