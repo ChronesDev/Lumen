@@ -8,6 +8,8 @@ namespace Lumen::LUI
 {
     struct ColorBrushResource : LUIResource<Color, winrt::com_ptr<ID2D1SolidColorBrush>>
     {
+        using LUIResource<Color, winrt::com_ptr<ID2D1SolidColorBrush>>::LUIResource;
+
         virtual ~ColorBrushResource() = default;
 
     public:
