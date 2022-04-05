@@ -44,13 +44,19 @@ namespace Lumen::UI
         LContext->Update();
 
         var lasted = (Time.Now - now).Micro;
-//        Console.Log("Time Lasted: ", lasted);
+        // Console.Log("Time Lasted: ", lasted);
     }
 
-    fun OnInitRender()->void { }
+    void TamperAround();
 
-    fun OnRelease()->void { LContext->SetDrawContext(nullptr);
+    fun OnInitRender()->void
+    {
+        TamperAround();
+
+        LContext->RootElement->ForceComputeLayout();
     }
+
+    fun OnRelease()->void { LContext->SetDrawContext(nullptr); }
 }
 
 #include <indxe-ui>

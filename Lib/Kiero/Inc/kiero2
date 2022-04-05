@@ -1,19 +1,26 @@
 #pragma once
 
+#include <vector>
+
 #include <MinHook.h>
 #include <kiero.h>
 
+#if KIERO_INCLUDE_D3D12
+#include <dxgi.h>
+#endif
+
 namespace kiero
 {
-    inline void unbind_MH_RemoveHook(uint16_t _index)
-    {
-        auto g_renderType = getRenderType();
-        auto g_methodsTable = getMethodsTable();
+    void unbind_MH_RemoveHook(uint16_t _index);
 
-        if (g_renderType != RenderType::None)
-        {
-            unbind(_index);
-            MH_RemoveHook((void*)g_methodsTable[_index]);
-        }
-    }
+#if KIERO_INCLUDE_D3D12
+    inline int IDXGISwapchain1_Bindings_Length_ = 29;
+    inline std::vector<void*> IDXGISwapchain1_Bindings_ { };
+    bool has_init_IDXGISwapchain1_Bindings_();
+    kiero::Status::Enum init_IDXGISwapchain1_Bindings_();
+    void shutdown_IDXGISwapchain1_Bindings_();
+    kiero::Status::Enum bind_IDXGISwapchain1_Bindings_(uint16_t _index, void** _original, void* _function);
+    void unbind_IDXGISwapChain1_Bindings_(uint16_t _index);
+    void unbind_IDXGISwapchain1_Bindings_MH_RemoveHook_(uint16_t _index);
+#endif
 }

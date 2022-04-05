@@ -7,67 +7,75 @@
 
 namespace Lumen::UI
 {
-    fun GetUI2()->ui_ref
-    {
-        var mapper = ContainerMapper();
-
-        // clang-format disable
-        sub VStack mapn {
-            m Name = "Stack1";
-            m Alignment = Align::LeftTop;
-            m Margin = { 20, 20 };
-            m Width = 100;
-
-            sub FillRect mapn {
-                m Height = 40;
-                m Fill = Color::RGBA(97, 255, 69, 100);
-            };
-            sub HStack mapn {
-                sub BlurRect mapn {
-                    m Width = 50;
-                    m MinHeight = 50;
-                    m Padding = { 10 };
-                };
-                sub BlurRect mapn {
-                    m Width = 50;
-                    m MinHeight = 50;
-                };
-            };
-            sub BlurRect mapn {
-                m Height = 30;
-            };
-            sub FillRect mapn {
-                m Name = "X";
-                m MaxSize = { AutoF, 50 };
-                m Margin = { 5, 5 };
-                m Padding = { 10, 0 };
-                m Fill = Colors::Aqua;
-            };
-
-            sub SimpleButton mapn {
-                m Height = 30;
-                m Clicked += [](auto* e) {
-                    Console.Log("Clicked!");
-                };
-            };
-        };
-        // clang-format enable
-
-        return mapper.Make();
-    }
-
     fun GetUI()->ui_ref
     {
-        var u = INew<Index::UI::ScopedContainer>();
-        var s = INew<Index::UI::HStack>();
-        u->Attach(s);
+        // clang-format disable
+        var mapper = ScopedContainerMapper();
+        m Name = "Container_ClickGUI";
+        m Alignment = Align::Center;
 
-        for (int i = 0; i < 10; i++)
-        {
-            s->Attach(GetUI2());
-        }
+        sub BlurRect mapmn;
+        sub FillRect mapn {
+            m Fill = Color::RGBA(15, 15, 15, 140);
+        };
 
-        return u;
+        sub VStack mapn {
+            m Padding = { 6 };
+            sub HStack mapn {
+                m Height = 30;
+                sub SimpleButton mapn {
+                    m Name = "SimpleButton_Tab1";
+                    m Width = 60;
+                    m Margin = { 0, 0, 4, 0 };
+                    m Clicked += [](auto* e) {
+                        var switcher = e->SearchT<Switcher>(UIPath::From("Switcher"));
+                        switcher->Index = 0;
+                    };
+                };
+                sub SimpleButton mapn {
+                    m Name = "SimpleButton_Tab2";
+                    m Width = 60;
+                    m Margin = { 0, 0, 4, 0 };
+                    m Clicked += [](auto* e) {
+                        var switcher = e->SearchT<Switcher>(UIPath::From("Switcher"));
+                        switcher->Index = 1;
+                    };
+                };
+                sub SimpleButton mapn {
+                    m Name = "SimpleButton_Tab3";
+                    m Width = 60;
+                    m Margin = { 0, 0, 4, 0 };
+                    m Clicked += [](auto* e) {
+                        var switcher = e->SearchT<Switcher>(UIPath::From("Switcher"));
+                        switcher->Index = 2;
+                    };
+                };
+            };
+            sub Switcher mapn {
+                m Name = "Switcher";
+                m MinWidth = 600;
+                m Height = 350;
+                m Padding = { 0, 80, 0, 0 };
+                m Index = 1;
+
+                sub Container, 0 mapn {
+                    sub FillRect mapn {
+                        m MaxSize = { 20, 20 };
+                        m Fill = Colors::Red;
+                    };
+                };
+                sub Container, 1 mapn {
+                    sub FillRect mapn {
+                        m MaxSize = { 20, 20 };
+                        m Fill = Colors::Lime;
+                    };
+                };
+                sub Container, 2 mapmn;
+            };
+        };
+
+        return mapper.Make();
+        // clang-format enable
     }
 }
 

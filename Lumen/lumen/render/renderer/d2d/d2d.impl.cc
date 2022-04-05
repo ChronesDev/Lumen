@@ -15,6 +15,7 @@ namespace Lumen::Render::D2D
     static fun RenderReleaseSub_()->void;
 
     static fun OnPresent_(IDXGISwapChain3* SwapChainPtr, uint SyncInterval, uint Flags)->HRESULT;
+    static fun OnPresent1_(IDXGISwapChain3* SwapChainPtr, uint SyncInterval, const DXGI_PRESENT_PARAMETERS* PresentParameters)->HRESULT;
     static fun OnResizeBuffers_(IDXGISwapChain* SwapChainPtr, uint BufferCount, uint Width, uint Height,
         DXGI_FORMAT NewFormat, uint SwapChainFlags)
         ->HRESULT;
@@ -68,6 +69,7 @@ namespace Lumen::Render::D2D
     static fun RenderInit_()->void
     {
         HookDXGIPresent(OnPresent_);
+        HookDXGIPresent1(OnPresent1_);
         HookDXGIResizeBuffers(OnResizeBuffers_);
         HookDXGIRelease(OnRelease_);
         HookD3D12ExecuteCommandLists(OnExecuteCommandLists_);
@@ -78,6 +80,7 @@ namespace Lumen::Render::D2D
     static fun RenderDeinit_()->void
     {
         if (IsDXGIPresentHooked()) UnhookDXGIPresent();
+        if (IsDXGIPresent1Hooked()) UnhookDXGIPresent1();
         if (IsDXGIResizeBuffersHooked()) UnhookDXGIResizeBuffers();
         if (IsDXGIReleaseHooked()) UnhookDXGIRelease();
         if (IsD3D12ExecuteCommandListsHooked()) UnhookD3D12ExecuteCommandLists();
@@ -137,6 +140,14 @@ namespace Lumen::Render::D2D
 
         return result;
     }
+
+    static fun OnPresent1_(IDXGISwapChain3* SwapChainPtr, uint SyncInterval, const DXGI_PRESENT_PARAMETERS* PresentParameters)->HRESULT
+    {
+        var result = DXGIPresent1Original(SwapChainPtr, SyncInterval, PresentParameters);
+
+        return result;
+    }
+
 
     static fun OnResizeBuffers_(IDXGISwapChain* SwapChainPtr, uint BufferCount, uint Width, uint Height,
         DXGI_FORMAT NewFormat, uint SwapChainFlags)
@@ -204,8 +215,8 @@ namespace Lumen::Render::D2D
 
         // GetBufferCount
         {
-            DXGI_SWAP_CHAIN_DESC swapChainDescription;
-            SwapChain_->GetDesc(&swapChainDescription);
+            DXGI_SWAP_CHAIN_DESC1 swapChainDescription;
+            SwapChain_->GetDesc1(&swapChainDescription);
             res::BufferCount = swapChainDescription.BufferCount;
         }
 
@@ -273,7 +284,7 @@ namespace Lumen::Render::D2D
                 {
                     D2D1_BITMAP_PROPERTIES1 props
                         = D2D1::BitmapProperties1(D2D1_BITMAP_OPTIONS_TARGET | D2D1_BITMAP_OPTIONS_CANNOT_DRAW,
-                            D2D1::PixelFormat(DXGI_FORMAT_UNKNOWN, D2D1_ALPHA_MODE_PREMULTIPLIED), dpi, dpi);
+                            D2D1::PixelFormat(DXGI_FORMAT_R8G8B8A8_UNORM, D2D1_ALPHA_MODE_IGNORE), dpi, dpi);
                     res::D2D1DeviceContext->CreateBitmapFromDxgiSurface(
                         res::DXGISurfaces[i].get(), props, res::D2D1Bitmaps[i].put());
                 }
@@ -297,16 +308,26 @@ namespace Lumen::Render::D2D
         // Begin Render
         const var d3d11Resources = res::D3D11Resources[i].get();
         res::D3D11On12Device->AcquireWrappedResources(&d3d11Resources, 1);
+
+//        const var d3d11Resources2 = res::D3D11Resources[(i + 1) % res::BufferCount].get();
+//        res::D3D11On12Device->AcquireWrappedResources(&d3d11Resources2, 1);
+
         dc->SetTarget(res::D2D1Bitmaps[i].get());
         dc->BeginDraw();
 
+//        ThrowIfFailed(dc->EndDraw());
+//        dc->SetTarget(res::D2D1Bitmaps[(i + 1) % res::BufferCount].get());
+//        dc->BeginDraw();
 //        {
-//            if (!ColorEffect) dc->CreateEffect(CLSID_D2D1Grayscale, ColorEffect.put());
+//            winrt::com_ptr<ID2D1SolidColorBrush> b;
+//            dc->CreateSolidColorBrush(D2D1::ColorF(0, 0, 1), b.put());
+//            dc->FillRectangle(D2D1::RectF(0, 0, Width, Height), b.get());
 //
-//            CopyBitmap(dc, res::D2D1Bitmaps[i], BackBuffer);
-//            ColorEffect->SetInput(0, BackBuffer.get());
-//            dc->DrawImage(ColorEffect.get());
+//            ThrowIfFailed(dc->EndDraw());
+//            dc->SetTarget(res::D2D1Bitmaps[i].get());
+//            dc->BeginDraw();
 //        }
+
 
         // DXRender
         DXRender.Invoke();
@@ -314,19 +335,10 @@ namespace Lumen::Render::D2D
         ThrowIfFailed(dc->EndDraw());
         dc->BeginDraw();
 
-        //        {
-        //            var r = D2D1::RoundedRect(D2D1::RectF(10, 10, 40, 40), 5, 5);
-        //            var c = D2D1::ColorF(D2D1::ColorF::Red);
-        //            com_ptr<ID2D1SolidColorBrush> b;
-        //            dc->CreateSolidColorBrush(c, b.put());
-        //            dc->FillRoundedRectangle(r, b.get());
-        //
-        //            ThrowIfFailed(dc->EndDraw());
-        //            dc->BeginDraw();
-        //        }
-
         // End Render
         ThrowIfFailed(dc->EndDraw());
+
+//        res::D3D11On12Device->ReleaseWrappedResources(&d3d11Resources2, 1);
 
         res::D3D11On12Device->ReleaseWrappedResources(&d3d11Resources, 1);
         res::D3D11DeviceContext->Flush();

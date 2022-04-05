@@ -15,6 +15,10 @@ namespace Lumen::LUI
             LUIContext* lc;
         };
 
+    public:
+        fun GetLContext() const->LUIContext* { return LContext_; }
+        INDEX_Property(get = GetLContext) LUIContext* LContext;
+
     protected:
         void LUIElement_OnAttachedToUIRoot_(IPtr<IUIRoot> root)
         {

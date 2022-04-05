@@ -49,14 +49,14 @@ namespace Lumen::LUI
         if (BlurEffect_ == nullptr)
         {
             d2d::ThrowIfFailed(DrawContext_->CreateEffect(CLSID_D2D1GaussianBlur, BlurEffect_.put()));
-            BlurEffect_->SetValue(D2D1_GAUSSIANBLUR_PROP_STANDARD_DEVIATION, 10.0f);
+            BlurEffect_->SetValue(D2D1_GAUSSIANBLUR_PROP_STANDARD_DEVIATION, 30.0f);
             BlurEffect_->SetValue(D2D1_GAUSSIANBLUR_PROP_OPTIMIZATION, D2D1_GAUSSIANBLUR_OPTIMIZATION_SPEED);
             BlurEffect_->SetValue(D2D1_GAUSSIANBLUR_PROP_BORDER_MODE, D2D1_BORDER_MODE_HARD);
         }
         BlurEffect_->SetInput(0, BackBuffer_.get());
 
         d2d::MakeBlurBufferArgs args {
-            .BackBuffer = BackBuffer_, .BlurBuffer = BlurBuffer_, .BlurEffect = &BlurEffect_, .Sigma = 10.0f
+            .BackBuffer = BackBuffer_, .BlurBuffer = BlurBuffer_, .BlurEffect = &BlurEffect_, .Sigma = 30.0f
         };
         d2d::MakeBlurBuffer(DrawContext_.get(), args);
 
