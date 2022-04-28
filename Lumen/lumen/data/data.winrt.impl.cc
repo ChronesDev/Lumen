@@ -35,8 +35,6 @@ fun Lumen_Data_LoadDataDir_()->void
     {
         Lumen::Data::DataPath = Lumen::Data::MinecraftDataPath / "client" / "lumen";
         Lumen::Data::DataDirectory =  Lumen::Data::DataPath.string();
-
-        Debug.Log("DataDirectory: ", Lumen::Data::DataDirectory);
     }
 }
 
