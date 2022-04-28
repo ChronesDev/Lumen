@@ -14,7 +14,7 @@ namespace Lumen::Signature
                                "EC 60 44 0F B7 BC 24 B0 00 00 00 48 8B D9 44 0F B7 A4 24 B8 00 00 00 33 F6 44 "
                                "0F B7 AC 24 C0 00 00 00";
 
-    global string GetFov = "40 53 48 83 EC 70 0F 29 7C 24 50 44 0F 29 44 24 40 48 8B";
+    global string GetFov = "48 89 5C 24 18 56 48 83 EC 60 0F 29 74 24 50 44";
 
     global string GetGamma = "48 83 EC 28 80 B9 B9 12 00 00 00 48 8D 54 24 30 48 8B 01 74 35 41 B8 16";
 
