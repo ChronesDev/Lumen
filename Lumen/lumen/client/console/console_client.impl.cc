@@ -181,10 +181,10 @@ namespace Lumen::Terminal
             Log("Initializing modules");
             Modules::Init();
 
-            Log("Initializing Renderer");
-            Lumen::Render::Init(Render::RenderType::D2D);
+            //Log("Initializing Renderer");
+            //Lumen::Render::Init(Render::RenderType::D2D);
 
-            UI::Init();
+            //UI::Init();
         }
         catch (std::runtime_error& ex)
         {
@@ -210,7 +210,7 @@ namespace Lumen::Terminal
     {
         using namespace rang;
 
-        Lumen::Render::TryDeinit();
+        //Lumen::Render::TryDeinit();
 
         Modules::Deinit();
         Input::Deinit();

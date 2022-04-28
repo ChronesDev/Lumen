@@ -30,6 +30,8 @@ namespace Lumen::UI
                     m Clicked += [](auto* e) {
                         var switcher = e->SearchT<Switcher>(UIPath::From("Switcher"));
                         switcher->Index = 0;
+                        var mee = e->Search(UIPath::From("Mee"));
+                        mee->Height = 100;
                     };
                 };
                 sub SimpleButton mapn {
@@ -39,6 +41,8 @@ namespace Lumen::UI
                     m Clicked += [](auto* e) {
                         var switcher = e->SearchT<Switcher>(UIPath::From("Switcher"));
                         switcher->Index = 1;
+                        var mee = e->Search(UIPath::From("Mee"));
+                        mee->Height = 120;
                     };
                 };
                 sub SimpleButton mapn {
@@ -53,24 +57,32 @@ namespace Lumen::UI
             };
             sub Switcher mapn {
                 m Name = "Switcher";
-                m MinWidth = 600;
-                m Height = 350;
-                m Padding = { 0, 80, 0, 0 };
                 m Index = 1;
 
                 sub Container, 0 mapn {
                     sub FillRect mapn {
-                        m MaxSize = { 20, 20 };
+                        m MinSize = { 60, 60 };
                         m Fill = Colors::Red;
                     };
                 };
                 sub Container, 1 mapn {
                     sub FillRect mapn {
-                        m MaxSize = { 20, 20 };
+                        m MinSize = { 100, 100 };
                         m Fill = Colors::Lime;
                     };
                 };
                 sub Container, 2 mapmn;
+            };
+            sub FillRect mapn {
+                m Name = "Mee";
+                m Alignment = Align::Center;
+                m Size = { 20, 20 };
+                m Fill = Colors::Aqua;
+            };
+            sub FillRect mapn {
+                m Alignment = Align::Center;
+                m Size = { 20, 20 };
+                m Fill = Colors::White;
             };
         };
 

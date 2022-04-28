@@ -1,3 +1,12 @@
+#include <Unknwn.h>
+#include <winrt/base.h>
+#include <winrt/windows.ui.core.h>
+#include <winrt/windows.ui.composition.core.h>
+#include <winrt/windows.ui.input.h>
+#include <winrt/windows.ui.xaml.h>
+#include <winrt/windows.foundation.h>
+#include <winrt/windows.applicationmodel.core.h>
+
 #include <lumen/input/input.cc>
 #include <lumen/ui/lui/lui.cc>
 
@@ -16,8 +25,8 @@ namespace Lumen::UI
         elif (state == KeyState::Released) { LContext->TriggerKeyReleased(key); }
         if (LContext->HasCapturedInput)
         {
-//            handled = true;
-//            cancel = true;
+            handled = true;
+            cancel = true;
         }
     }
     static fun OnMouseMoved_(Vec2I position, bool& handled, bool& cancel)

@@ -13,8 +13,18 @@ static fun OnGetMouseSensitivity_(void* that, UInt64 a1)->float;
 
 static List<std::pair<string, IPtr<IEasing>>> Easings_ = {
     { "Linear", INew<LinearEasing>() },
+
     { "QuartOut", INew<QuartOutEasing>() },
     { "QuartInOut", INew<QuartInOutEasing>() },
+
+    { "CubicOut", INew<CubicOutEasing>() },
+    { "CubicInOut", INew<CubicInOutEasing>() },
+
+    { "CircOut", INew<CircOutEasing>() },
+    { "CircInOut", INew<CircInOutEasing>() },
+
+    { "SizeOut", INew<SineOutEasing>() },
+    { "SizeInOut", INew<SineInOutEasing>() },
 };
 
 namespace Lumen::Modules
@@ -135,6 +145,17 @@ namespace Lumen::Modules
                 }
                 Log.Custom(
                     fgB::blue, "-> ", SensitivityTo.HasValue ? std::to_string(SensitivityTo.Value) : (string) "none");
+            }
+
+            elif (args[0] == "hand")
+            {
+                if (args.Length != 1)
+                {
+                    Log.Fail("Wrong amount of arguments.");
+                    Log.Custom(fgB::green, "... to", "\t\t", fg::blue, "");
+                    return;
+                }
+                Log.Custom(fgB::blue, "-> ", HandFov != 0 ? std::to_string(HandFov) : "none");
             }
         }
     }
@@ -283,6 +304,33 @@ namespace Lumen::Modules
                 {
                     Log.Fail("Wrong argument.");
                 }
+                Log.Custom(fgB::blue, "-> ", SensitivityTo.HasValue ? std::to_string(SensitivityTo.Value) : "none");
+            }
+
+            elif (args[0] == "hand")
+            {
+                if (args.Length != 2)
+                {
+                    Log.Fail("Wrong amount of arguments.");
+                    Log.Custom(fgB::green, "... hand (value)", "\t\t", fg::blue, "");
+                    return;
+                }
+                try
+                {
+                    if (args[1] == "none")
+                    {
+                        HandFov = 0;
+                    }
+                    else
+                    {
+                        HandFov = (float)std::stod(args[1]);
+                    }
+                }
+                catch (...)
+                {
+                    Log.Fail("Wrong argument.");
+                }
+                Log.Custom(fgB::blue, "-> ", HandFov != 0 ? std::to_string(HandFov) : "none");
             }
         }
     }
@@ -297,18 +345,21 @@ namespace Lumen::Modules
         j["InFactor"] = InFactor;
         j["OutFactor"] = OutFactor;
         j["SensitivityTo"] = Limit<float>(SensitivityTo.ValueOr(0), 0, 2);
+        j["HandFov"] = HandFov;
     }
     fun Zoom::LoadConfig(nlohmann::json& j)->void
     {
         SetState(j["IsEnabled"]);
-        To = j["To"];
-        Duration = TimeSpan::FromSec(j["Duration"]);
+        To = j.value("To", 40.f);
+        Duration = TimeSpan::FromSec(j.value("Duration", 0.1));
         BindZoom = Input::FindKeyByKeyName((std::string)j["BindZoom"]);
-        InFactor = j["InFactor"];
-        OutFactor = j["OutFactor"];
+        InFactor = j.value("InFactor", 1);
+        OutFactor = j.value("OutFactor", 1);
 
         SensitivityTo = Limit<float>(j["SensitivityTo"], 0, 2);
         if (SensitivityTo.Value == 0) SensitivityTo = Null;
+
+        HandFov = j.value("HandFov", 0);
 
         // Easing
         {
@@ -367,6 +418,13 @@ static fun OnGetFov_(void* that, float f, bool b)->float
 
             processPoint = now;
             return Lerp<float>(fov, to, (float)ZoomModule->Easing->operator()(progress));
+        }
+    }
+    else
+    {
+        if (ZoomModule->HandFov != 0)
+        {
+            return ZoomModule->HandFov;
         }
     }
 

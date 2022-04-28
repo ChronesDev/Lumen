@@ -52,6 +52,8 @@ namespace Lumen::Modules
         float OutFactor = 1;
 
         Nullable<float> SensitivityTo = Null;
+
+        float HandFov = 0;
     };
 
     global IPtr<Zoom> ZoomModule;

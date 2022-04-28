@@ -309,24 +309,22 @@ namespace Lumen::Render::D2D
         const var d3d11Resources = res::D3D11Resources[i].get();
         res::D3D11On12Device->AcquireWrappedResources(&d3d11Resources, 1);
 
-//        const var d3d11Resources2 = res::D3D11Resources[(i + 1) % res::BufferCount].get();
-//        res::D3D11On12Device->AcquireWrappedResources(&d3d11Resources2, 1);
-
         dc->SetTarget(res::D2D1Bitmaps[i].get());
         dc->BeginDraw();
 
-//        ThrowIfFailed(dc->EndDraw());
-//        dc->SetTarget(res::D2D1Bitmaps[(i + 1) % res::BufferCount].get());
-//        dc->BeginDraw();
-//        {
-//            winrt::com_ptr<ID2D1SolidColorBrush> b;
-//            dc->CreateSolidColorBrush(D2D1::ColorF(0, 0, 1), b.put());
-//            dc->FillRectangle(D2D1::RectF(0, 0, Width, Height), b.get());
-//
-//            ThrowIfFailed(dc->EndDraw());
-//            dc->SetTarget(res::D2D1Bitmaps[i].get());
-//            dc->BeginDraw();
-//        }
+        {
+            CopyBitmap(dc, res::D2D1Bitmaps[i], BackBuffer);
+        }
+
+        // Grayscale effect
+        {
+            if (!ColorEffect)
+            {
+                ThrowIfFailed(dc->CreateEffect(CLSID_D2D1Grayscale, ColorEffect.put()));
+                ColorEffect->SetInput(0, BackBuffer.get());
+            }
+            dc->DrawImage(ColorEffect.get());
+        }
 
 
         // DXRender
@@ -337,8 +335,6 @@ namespace Lumen::Render::D2D
 
         // End Render
         ThrowIfFailed(dc->EndDraw());
-
-//        res::D3D11On12Device->ReleaseWrappedResources(&d3d11Resources2, 1);
 
         res::D3D11On12Device->ReleaseWrappedResources(&d3d11Resources, 1);
         res::D3D11DeviceContext->Flush();

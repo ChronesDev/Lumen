@@ -13,6 +13,7 @@ namespace Lumen::UI
 
     fun Init()->void
     {
+        //return;
         LContext = INew<LUIContext>();
 
         Render::D2D::DXRender += OnRender;
@@ -25,6 +26,7 @@ namespace Lumen::UI
     }
     fun Deinit()->void
     {
+        //return;
         Render::D2D::DXRender -= OnRender;
         Render::D2D::DXRenderInit -= OnInitRender;
         Render::D2D::DXRelease -= OnRelease;
@@ -38,21 +40,20 @@ namespace Lumen::UI
 
         LContext->SetDrawContext(Render::D2D::Res::D2D1DeviceContext);
 
-        FrameCounter.Next();
-        LContext->Compute(FrameCounter.Frame, { 0.f, 0.f, (float)Render::D2D::Width, (float)Render::D2D::Height });
+        LContext->Compute(FrameCounter.Next(), { 0.f, 0.f, (float)Render::D2D::Width, (float)Render::D2D::Height });
+        if (auto e = LContext->RootElement)
+        {
+            e->ForceComputeLayout();
+        }
         LContext->Render();
         LContext->Update();
 
         var lasted = (Time.Now - now).Micro;
         // Console.Log("Time Lasted: ", lasted);
     }
-
-    void TamperAround();
-
+    
     fun OnInitRender()->void
     {
-        TamperAround();
-
         LContext->RootElement->ForceComputeLayout();
     }
 
