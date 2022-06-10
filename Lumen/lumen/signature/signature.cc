@@ -16,9 +16,10 @@ namespace Lumen::Signature
 
     global string GetFov = "48 89 5C 24 18 56 48 83 EC 60 0F 29 74 24 50 44";
 
-    global string GetGamma = "48 83 EC 28 80 B9 B9 12 00 00 00 48 8D 54 24 30 48 8B 01 74 35 41 B8 16";
+    global string GetGamma = "48 83 EC 28 80 B9 ?? ?? 00 00 00 48 8D 54 24 30 48 8B 01 74 35 41 B8 16 01";
 
-    global string GetWorldTime = "48 8B 81 50 02 00 00 48 85 C0 74 07 8B 80 50";
+    global string GetWorldTime
+        = "48 8B 81 50 02 00 00 48 85 C0 74 07 8B 80 ?? ?? 00 00 C3 8B 81 ?? ?? 00 00 C3 CC CC CC CC CC CC 48 8B C1";
 
     // TODO: Remove that
     /*? 1.18.12
