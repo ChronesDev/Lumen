@@ -6,7 +6,7 @@
 
 namespace Lumen
 {
-	fun Entry()->void;
+    fun Entry()->void;
 }
 
 #include <indxe>

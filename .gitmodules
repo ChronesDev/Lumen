@@ -1,3 +1,6 @@
 [submodule "Index/Ext"]
 	path = Index/Ext
 	url = https://github.com/ChronesDev/Index2
+[submodule "Lib/MinHook/Ext"]
+	path = Lib/MinHook/Ext
+	url = https://github.com/TsudaKageyu/minhook

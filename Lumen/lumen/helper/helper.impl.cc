@@ -4,130 +4,127 @@
 
 #include <indxs>
 
-static FILE* StdIn_ = { };
-static FILE* StdOut_ = { };
-static FILE* StdErr_ = { };
+static FILE* StdIn_ = {};
+static FILE* StdOut_ = {};
+static FILE* StdErr_ = {};
 
 namespace Lumen::Helper
 {
-	fun TryMakeConsole() -> void
-	{
+    fun TryMakeConsole()->void
+    {
 #ifdef INDEX_DEBUG
-		MakeConsole();
+        MakeConsole();
 #endif
-	}
+    }
 
-	fun MakeConsole() -> void
-	{
-		if (!::AllocConsole()) INDEX_THROW("AllocConsole returned false.");
+    fun MakeConsole()->void
+    {
+        if (!::AllocConsole()) INDEX_THROW("AllocConsole returned false.");
 
-		StdCoutConsoleInit();
-	}
-	fun DestroyConsole()->void
-	{
-		StdCoutConsoleDeinit();
+        StdCoutConsoleInit();
+    }
+    fun DestroyConsole()->void
+    {
+        StdCoutConsoleDeinit();
 
-		::FreeConsole();
-	}
+        ::FreeConsole();
+    }
 
-	fun StdCoutConsoleInit()->void
-	{
-		freopen_s(&StdIn_, "CONIN$", "r", stdin);
-		freopen_s(&StdOut_, "CONOUT$", "w", stderr);
-		freopen_s(&StdErr_, "CONOUT$", "w", stdout);
-	}
-	fun StdCoutConsoleDeinit()->void
-	{
-		fclose(StdIn_);
-		fclose(StdOut_);
-		fclose(StdErr_);
-	}
+    fun StdCoutConsoleInit()->void
+    {
+        freopen_s(&StdIn_, "CONIN$", "r", stdin);
+        freopen_s(&StdOut_, "CONOUT$", "w", stderr);
+        freopen_s(&StdErr_, "CONOUT$", "w", stdout);
+    }
+    fun StdCoutConsoleDeinit()->void
+    {
+        fclose(StdIn_);
+        fclose(StdOut_);
+        fclose(StdErr_);
+    }
 
-	fun EnableConsoleAnsiCodes() -> void
-	{
-		HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
-		if (hOut == INVALID_HANDLE_VALUE) INDEX_THROW("GetStdHandle failed.");
+    fun EnableConsoleAnsiCodes()->void
+    {
+        HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+        if (hOut == INVALID_HANDLE_VALUE) INDEX_THROW("GetStdHandle failed.");
 
-		DWORD dwMode = 0;
-		if (!GetConsoleMode(hOut, &dwMode)) INDEX_THROW("GetConsoleMode failed.");
+        DWORD dwMode = 0;
+        if (!GetConsoleMode(hOut, &dwMode)) INDEX_THROW("GetConsoleMode failed.");
 
-		dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
-		if (!SetConsoleMode(hOut, dwMode)) INDEX_THROW("SetConsoleMode failed.");
-	}
+        dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+        if (!SetConsoleMode(hOut, dwMode)) INDEX_THROW("SetConsoleMode failed.");
+    }
 
-	fun ConfigureConsoleStyle()->void
-	{
-		static Vec2S consoleSize { 98, 24 };
+    fun ConfigureConsoleStyle()->void
+    {
+        static Vec2S consoleSize { 98, 24 };
 
-		HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
-		if (hOut == INVALID_HANDLE_VALUE) INDEX_THROW("GetStdHandle failed.");
+        HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+        if (hOut == INVALID_HANDLE_VALUE) INDEX_THROW("GetStdHandle failed.");
 
-		SMALL_RECT DisplayArea = {0, 0, 0, 0};
-		int x = consoleSize.X;
-		int y = consoleSize.Y;
+        SMALL_RECT DisplayArea = { 0, 0, 0, 0 };
+        int x = consoleSize.X;
+        int y = consoleSize.Y;
 
-		DisplayArea.Right  = x;
-		DisplayArea.Bottom = y;
+        DisplayArea.Right = x;
+        DisplayArea.Bottom = y;
 
-		SetConsoleWindowInfo(hOut, TRUE, &DisplayArea);
+        SetConsoleWindowInfo(hOut, TRUE, &DisplayArea);
 
-		CONSOLE_FONT_INFOEX cfi;
-		cfi.cbSize = sizeof(cfi);
-		cfi.nFont = 0;
-		cfi.dwFontSize.X = 0;                   // Width of each character in the font
-		cfi.dwFontSize.Y = 20;                  // Height
-		cfi.FontFamily = FF_DONTCARE;
-		cfi.FontWeight = FW_MEDIUM;
-		std::wcscpy(cfi.FaceName, L"Consolas"); // Choose your font
-		SetCurrentConsoleFontEx(hOut, FALSE, &cfi);
-	}
+        CONSOLE_FONT_INFOEX cfi;
+        cfi.cbSize = sizeof(cfi);
+        cfi.nFont = 0;
+        cfi.dwFontSize.X = 0; // Width of each character in the font
+        cfi.dwFontSize.Y = 20; // Height
+        cfi.FontFamily = FF_DONTCARE;
+        cfi.FontWeight = FW_MEDIUM;
+        std::wcscpy(cfi.FaceName, L"Consolas"); // Choose your font
+        SetCurrentConsoleFontEx(hOut, FALSE, &cfi);
+    }
 
-	fun WaitUntilGameIsLoaded()->void
-	{
-		List<string> loadedModules;
+    fun WaitUntilGameIsLoaded()->void
+    {
+        List<string> loadedModules;
 
-		while (true)
-		{
-			HMODULE hMods[1024];
-			HANDLE hProcess;
-			DWORD cbNeeded;
+        while (true)
+        {
+            HMODULE hMods[1024];
+            HANDLE hProcess;
+            DWORD cbNeeded;
 
-			var hProc = GetCurrentProcess();
-			if (hProc == nullptr) throw std::exception("hProc was 0.");
+            var hProc = GetCurrentProcess();
+            if (hProc == nullptr) throw std::exception("hProc was 0.");
 
-			if (K32EnumProcessModules(hProc, hMods, sizeof(hMods), &cbNeeded))
-			{
-				for (int i = 0; i < (cbNeeded / sizeof(HMODULE)); i++)
-				{
-					TCHAR szModName[MAX_PATH];
+            if (K32EnumProcessModules(hProc, hMods, sizeof(hMods), &cbNeeded))
+            {
+                for (int i = 0; i < (cbNeeded / sizeof(HMODULE)); i++)
+                {
+                    TCHAR szModName[MAX_PATH];
 
-					// Get the full path to the module's file.
+                    // Get the full path to the module's file.
 
-					if (GetModuleFileNameExA(hProc, hMods[i], szModName, sizeof(szModName) / sizeof(TCHAR)))
-					{
-						// Print the module name and handle value.
+                    if (GetModuleFileNameExA(hProc, hMods[i], szModName, sizeof(szModName) / sizeof(TCHAR)))
+                    {
+                        // Print the module name and handle value.
 
-						string name = szModName;
-						string fileName = name.Split("\\").back();
-						if (!loadedModules.Contains(fileName))
-						{
-							loadedModules.Add(fileName);
-						}
-						if (fileName == "mlang.dll" || fileName == "CoreShellAPI.dll" || fileName == "ncryptsslp.dll")
-						{
-							goto exit;
-						}
-					}
-				}
-			}
+                        string name = szModName;
+                        string fileName = name.Split("\\").back();
+                        if (!loadedModules.Contains(fileName)) { loadedModules.Add(fileName); }
+                        if (fileName == "mlang.dll" || fileName == "CoreShellAPI.dll" || fileName == "ncryptsslp.dll")
+                        {
+                            goto exit;
+                        }
+                    }
+                }
+            }
 
-			Sleep(300);
-			continue;
+            Sleep(300);
+            continue;
 
-			exit:
-			break;
-		}
-	}
+        exit:
+            break;
+        }
+    }
 }
 
 #include <indxe>

@@ -8,19 +8,19 @@
 
 namespace Lumen
 {
-	fun Entry() -> void
-	{
-		Helper::TryMakeConsole();
-		Helper::EnableConsoleAnsiCodes();
-		//Helper::ConfigureConsoleStyle();
-		SetConsoleTitle("Lumen Client");
+    fun Entry()->void
+    {
+        Helper::TryMakeConsole();
+        Helper::EnableConsoleAnsiCodes();
+        // Helper::ConfigureConsoleStyle();
+        SetConsoleTitle("Lumen Client");
 
-		rang::setWinTermMode(rang::winTerm::Ansi);
+        rang::setWinTermMode(rang::winTerm::Ansi);
 
-		Terminal::ConsoleEntry();
+        Terminal::ConsoleEntry();
 
-		Helper::DestroyConsole();
-	}
+        Helper::DestroyConsole();
+    }
 }
 
 #include <indxe>
